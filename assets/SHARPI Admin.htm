@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SHARPI Admin</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: white;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0 20px;
+      border-bottom: 1px solid rgba(255, 51, 51, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo {
+      width: 40px;
+      height: 40px;
+      background: #ff3333;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 4px 20px rgba(255, 51, 51, 0.3);
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.5px;
+    }
+
+    .header-title span {
+      color: #ff3333;
+    }
+
+    .header-badge {
+      background: rgba(255, 215, 0, 0.12);
+      border: 1px solid rgba(255, 215, 0, 0.15);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 10px;
+      color: #ffd700;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 12px 8px;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+
+    .stat-card:hover {
+      border-color: rgba(255, 51, 51, 0.2);
+    }
+
+    .stat-number {
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.2;
+    }
+
+    .stat-number.gold {
+      color: #ffd700;
+    }
+    .stat-number.green {
+      color: #00cc44;
+    }
+    .stat-number.blue {
+      color: #4ecdc4;
+    }
+    .stat-number.red {
+      color: #ff3333;
+    }
+    .stat-number.purple {
+      color: #a29bfe;
+    }
+
+    .stat-label {
+      font-size: 9px;
+      color: #666;
+      margin-top: 2px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      overflow-x: auto;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px 8px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #666;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s;
+      white-space: nowrap;
+      background: transparent;
+      border: none;
+      font-family: inherit;
+    }
+
+    .tab:hover {
+      color: #ccc;
+    }
+
+    .tab.active {
+      background: #ff3333;
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 51, 51, 0.25);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #888;
+      margin-bottom: 12px;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title .count {
+      font-size: 11px;
+      color: #555;
+      font-weight: 400;
+    }
+
+    .affiliate-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .affiliate-item:last-child {
+      border-bottom: none;
+    }
+
+    .affiliate-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .affiliate-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .affiliate-code {
+      font-size: 11px;
+      font-family: 'Monaco', monospace;
+      color: #ffd700;
+      letter-spacing: 0.5px;
+    }
+
+    .affiliate-contact {
+      font-size: 10px;
+      color: #555;
+    }
+
+    .affiliate-stats {
+      text-align: right;
+    }
+
+    .affiliate-sales {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .affiliate-earnings {
+      font-size: 14px;
+      font-weight: 700;
+      color: #00cc44;
+    }
+
+    .affiliate-status {
+      font-size: 9px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(0, 204, 68, 0.12);
+      color: #00cc44;
+      display: inline-block;
+      margin-top: 2px;
+    }
+
+    .user-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .user-item:last-child {
+      border-bottom: none;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .user-details {
+      font-size: 10px;
+      color: #555;
+    }
+
+    .user-status {
+      font-size: 9px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    .user-status.verified {
+      background: rgba(0, 204, 68, 0.12);
+      color: #00cc44;
+    }
+
+    .user-status.pending {
+      background: rgba(255, 215, 0, 0.12);
+      color: #ffd700;
+    }
+
+    .sale-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .sale-item:last-child {
+      border-bottom: none;
+    }
+
+    .sale-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .sale-user {
+      font-size: 13px;
+      color: white;
+    }
+
+    .sale-details {
+      font-size: 10px;
+      color: #555;
+    }
+
+    .sale-details .pkg {
+      color: #ffd700;
+    }
+    
+    .sale-details .owner {
+      color: #00cc44;
+      font-weight: 600;
+    }
+
+    .sale-right {
+      text-align: right;
+    }
+
+    .sale-amount {
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .sale-commission {
+      font-size: 10px;
+      color: #00cc44;
+    }
+
+    .badge-paid {
+      font-size: 9px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(0, 204, 68, 0.12);
+      color: #00cc44;
+    }
+
+    .badge-pending {
+      font-size: 9px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(255, 215, 0, 0.12);
+      color: #ffd700;
+    }
+
+    .payout-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .payout-item:last-child {
+      border-bottom: none;
+    }
+
+    .payout-affiliate {
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .payout-code {
+      font-size: 10px;
+      color: #888;
+      font-family: monospace;
+    }
+
+    .payout-amount {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffd700;
+    }
+
+    .btn-pay {
+      background: #00cc44;
+      border: none;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-pay:hover {
+      background: #00dd55;
+      transform: scale(1.02);
+    }
+
+    .btn-pay:active {
+      transform: scale(0.96);
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    .form-group label {
+      font-size: 11px;
+      color: #888;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+      letter-spacing: 0.3px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(34, 34, 34, 0.9);
+      border: 1px solid rgba(255, 51, 51, 0.12);
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #ff3333;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: #555;
+    }
+
+    .btn-generate {
+      width: 100%;
+      padding: 12px;
+      background: #ffd700;
+      border: none;
+      border-radius: 8px;
+      color: black;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+
+    .btn-generate:hover {
+      background: #ffe44d;
+      transform: scale(1.01);
+    }
+
+    .btn-generate:active {
+      transform: scale(0.97);
+    }
+
+    .btn-auto {
+      width: 100%;
+      padding: 12px;
+      background: #00cc44;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+
+    .btn-auto:hover {
+      background: #00dd55;
+      transform: scale(1.01);
+    }
+
+    .btn-auto:active {
+      transform: scale(0.97);
+    }
+
+    .code-display {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 215, 0, 0.15);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .code-display .code {
+      font-size: 22px;
+      font-weight: 700;
+      color: #ffd700;
+      font-family: 'Monaco', monospace;
+      letter-spacing: 2px;
+    }
+
+    .code-display .sub {
+      font-size: 10px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .code-display .btn-copy {
+      background: rgba(255, 215, 0, 0.12);
+      border: 1px solid rgba(255, 215, 0, 0.15);
+      color: #ffd700;
+      padding: 4px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 6px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .code-display .btn-copy:hover {
+      background: rgba(255, 215, 0, 0.2);
+    }
+
+    .token-display {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 204, 68, 0.3);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .token-display .token {
+      font-size: 14px;
+      font-weight: 700;
+      color: #00cc44;
+      font-family: 'Monaco', monospace;
+      letter-spacing: 1px;
+      word-break: break-all;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.92);
+      border: 1px solid #00cc44;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      color: white;
+      display: none;
+      z-index: 9999;
+      text-align: center;
+      max-width: 90%;
+      backdrop-filter: blur(12px);
+    }
+
+    .toast.show {
+      display: block;
+      animation: slideUp 0.3s ease;
+    }
+
+    .toast.error {
+      border-color: #ff3333;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px 10px;
+      color: #444;
+    }
+
+    .empty-state .icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .empty-state .text {
+      font-size: 13px;
+    }
+
+    .extracted-info {
+      background: rgba(0, 204, 68, 0.05);
+      border: 1px solid rgba(0, 204, 68, 0.15);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    .extracted-info .label {
+      font-size: 10px;
+      color: #666;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .extracted-info .value {
+      font-size: 14px;
+      color: white;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .header-title {
+        font-size: 16px;
+      }
+      .header-badge {
+        font-size: 8px;
+        padding: 2px 8px;
+      }
+      .stat-number {
+        font-size: 18px;
+      }
+      .tab {
+        font-size: 10px;
+        padding: 8px 6px;
+      }
+      .card {
+        padding: 12px;
+      }
+      .affiliate-name {
+        font-size: 13px;
+      }
+      .code-display .code {
+        font-size: 16px;
+      }
+      .token-display .token {
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+      .stat-card {
+        padding: 10px 8px;
+      }
+      .stat-number {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <div class="header-logo">🦈</div>
+        <div class="header-title">SHARPI <span>Admin</span></div>
+      </div>
+      <div class="header-badge">⚡ OVERWATCH</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number gold" id="statAffiliates">1</div>
+        <div class="stat-label">Affiliates</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number purple" id="statUsers">0</div>
+        <div class="stat-label">Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number green" id="statSales">2</div>
+        <div class="stat-label">Sales</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number blue" id="statRevenue">$29.98</div>
+        <div class="stat-label">Revenue</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="affiliates">Affiliates</button>
+      <button class="tab" data-tab="registered">Registered</button>
+      <button class="tab" data-tab="users">Users</button>
+      <button class="tab" data-tab="sales">Sales</button>
+      <button class="tab" data-tab="payouts">Payouts</button>
+      <button class="tab" data-tab="generate">Generate</button>
+      <button class="tab" data-tab="autotoken">Auto Token</button>
+      <button class="tab" data-tab="token">Token</button>
+    </div>
+
+    <!-- TAB: AFFILIATES -->
+    <div class="section active" id="sectionAffiliates">
+      <div class="card">
+        <div class="card-title">All Affiliates <span class="count" id="affiliateCount">1</span></div>
+        <div id="affiliateList">
+          <div class="affiliate-item">
+            <div class="affiliate-info">
+              <div class="affiliate-name">hossam b</div>
+              <div class="affiliate-code">AFF-0001-HOS</div>
+              <div class="affiliate-contact">0700565656 | hossamki</div>
+            </div>
+            <div class="affiliate-stats">
+              <div class="affiliate-sales">1 sales</div>
+              <div class="affiliate-earnings">$9.99</div>
+              <span class="affiliate-status">Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: REGISTERED (Linkmeup) -->
+    <div class="section" id="sectionRegistered">
+      <div class="card">
+        <div class="card-title">Registered Affiliates (Linkmeup) <span class="count" id="registeredCount">1</span></div>
+        <div id="registeredList">
+          <div class="affiliate-item">
+            <div class="affiliate-info">
+              <div class="affiliate-name">hossam b</div>
+              <div class="affiliate-code">AFF-0001-HOS</div>
+              <div class="affiliate-contact">
+                0700565656 | hossamki
+                
+              </div>
+            </div>
+            <div class="affiliate-stats">
+              <div class="affiliate-sales">1 sales</div>
+              <div class="affiliate-earnings">$9.99</div>
+              <span class="affiliate-status">Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: USERS -->
+    <div class="section" id="sectionUsers">
+      <div class="card">
+        <div class="card-title">All Users <span class="count" id="userCount">0</span></div>
+        <div id="userList"><div class="empty-state"><div class="icon">👤</div><div class="text">No users yet.</div></div></div>
+      </div>
+    </div>
+
+    <!-- TAB: SALES -->
+    <div class="section" id="sectionSales">
+      <div class="card">
+        <div class="card-title">All Sales <span class="count" id="saleCount">2</span></div>
+        <div id="salesList">
+          <div class="sale-item">
+            <div class="sale-info">
+              <div class="sale-user">Hossam Balidawa</div>
+              <div class="sale-details">
+                <span class="pkg">silver</span>
+                • Code: AFF 0001C HOS
+                <span class="owner">• Owner: Unknown Affiliate</span>
+              </div>
+            </div>
+            <div class="sale-right">
+              <div class="sale-amount">$9.99</div>
+              <div class="sale-commission">$ 5.00</div>
+              <span class="badge-pending">Pending</span>
+            </div>
+          </div>
+        
+          <div class="sale-item">
+            <div class="sale-info">
+              <div class="sale-user">Hossam Balidawa</div>
+              <div class="sale-details">
+                <span class="pkg">gold</span>
+                • Code: AFF-0001-HOS
+                <span class="owner">• Owner: hossam b</span>
+              </div>
+            </div>
+            <div class="sale-right">
+              <div class="sale-amount">$19.99</div>
+              <div class="sale-commission">$ 9.99</div>
+              <span class="badge-pending">Pending</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PAYOUTS -->
+    <div class="section" id="sectionPayouts">
+      <div class="card">
+        <div class="card-title">Pending Payouts</div>
+        <div id="payoutsList">
+          <div class="payout-item">
+            <div>
+              <div class="payout-affiliate">hossam b</div>
+              <div class="payout-code">AFF-0001-HOS</div>
+              <div style="font-size:10px; color:#555;">1 pending sales</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="payout-amount">$9.99</div>
+              <button class="btn-pay" onclick="markPaid('AFF-0001-HOS')">Mark Paid</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: GENERATE -->
+    <div class="section" id="sectionGenerate">
+      <div class="card">
+        <div class="card-title">Generate Affiliate Code</div>
+        <div class="form-group">
+          <label>Affiliate Name</label>
+          <input type="text" id="genName" placeholder="e.g., TikToker1">
+        </div>
+        <div class="form-group">
+          <label>WhatsApp Number</label>
+          <input type="text" id="genContact" placeholder="e.g., 256700000000">
+        </div>
+        <button class="btn-generate" onclick="generateAffiliate()">Generate Code</button>
+        <div id="genResult"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">All Codes</div>
+        <div id="allCodesList" style="font-size:12px; color:#888; max-height:200px; overflow-y:auto;">
+          <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+            <span style="color:#ffd700; font-family:monospace;">AFF-0001-HOS</span>
+            <span style="color:#666;">hossam b • 1 sales</span>
+            <button class="btn-copy" onclick="copyText('AFF-0001-HOS')" style="background:transparent; border:none; color:#ffd700; cursor:pointer; font-size:11px;">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: AUTO TOKEN GENERATOR -->
+    <div class="section" id="sectionAutotoken">
+      <div class="card" style="border-color:rgba(0,204,68,0.25);">
+        <div class="card-title" style="color:#00cc44;">⚡ Auto Token Generator</div>
+        <div style="font-size:12px; color:#666; margin-bottom:8px;">
+          Paste the user's WhatsApp message below. The system will automatically extract:
+          <span style="color:#888;">Name, Phone Number, and User ID</span>
+        </div>
+        <div class="form-group">
+          <label>Paste User Message</label>
+          <textarea id="autoPasteInput" rows="4" placeholder="Paste the WhatsApp message from user here..." style="font-size:13px;"></textarea>
+        </div>
+        <button class="btn-auto" onclick="autoGenerateToken()">🔍 Extract &amp; Generate Token</button>
+        <div id="autoExtractedInfo"></div>
+        <div id="autoTokenResult"></div>
+      </div>
+      <div class="card" style="border-color:rgba(255,215,0,0.1);">
+        <div class="card-title" style="color:#888;">📋 Sample WhatsApp Message Format</div>
+        <div style="font-size:12px; color:#555; line-height:1.6; background:rgba(0,0,0,0.2); padding:12px; border-radius:8px; font-family:monospace;">
+          Name: John Doe<br>
+          Phone: 0750338050<br>
+          ID: 001000
+        </div>
+        <div style="font-size:11px; color:#666; margin-top:8px;">
+          <strong>Note:</strong> The system looks for "Name:", "Phone:", and "ID:" or "User ID:" in the message.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: TOKEN -->
+    <div class="section" id="sectionToken">
+      <div class="card" style="border-color:rgba(0,204,68,0.2);">
+        <div class="card-title" style="color:#00cc44;">Manual Token Generation</div>
+        <div style="font-size:12px; color:#666; margin-bottom:10px;">Enter user details to generate a unique access token</div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="tokenName" placeholder="e.g., John Doe">
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" id="tokenPhone" placeholder="e.g., 0750338050">
+        </div>
+        <div class="form-group">
+          <label>User ID</label>
+          <input type="text" id="tokenUserId" placeholder="e.g., 001000">
+        </div>
+        <button class="btn-generate" onclick="generateAccessToken()" style="background:#00cc44; color:white;">Generate Token</button>
+        <div id="tokenResult" style="margin-top:10px;"></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:#888;">Instructions</div>
+        <div style="font-size:12px; color:#555; line-height:1.6;">
+          <p>1. Enter user's name, phone number, and User ID</p>
+          <p>2. Click "Generate Token"</p>
+          <p>3. Copy the token and send it to the user via WhatsApp</p>
+          <p>4. User enters the token in the app to gain access</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Supabase Library -->
+  <script src="SHARPI%20Admin_files/supabase-js@2_Klll"></script>
+
+  <script>
+    // ============================================================
+    // SUPABASE CONFIGURATION
+    // ============================================================
+    const SUPABASE_URL = 'https://wkdewqwqhopbwygsfdav.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_5QGobPerm0Bw973REoEvXg_Cs6n70lZ';
+
+    let supabaseClient = null;
+
+    function initSupabase() {
+      if (typeof supabase !== 'undefined') {
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('Supabase initialized');
+      } else {
+        setTimeout(initSupabase, 500);
+      }
+    }
+    initSupabase();
+
+    // ============================================================
+    // SECURE PROMO CODE GENERATOR
+    // ============================================================
+    function generateSecureCode(name, contact) {
+      const namePart = name.slice(0, 3).toUpperCase();
+      const contactPart = contact ? contact.slice(-4) : '0000';
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let randomPart = '';
+      for (let i = 0; i < 6; i++) {
+        randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return 'AFF-' + namePart + '-' + contactPart + '-' + randomPart;
+    }
+
+    // ============================================================
+    // DATA STORE
+    // ============================================================
+    let affData = {
+      affiliates: [],
+      registered: [],
+      users: [],
+      sales: [],
+      payouts: [],
+      affiliateIdCounter: 1
+    };
+
+    function loadData() {
+      try {
+        const saved = localStorage.getItem('sharpiAffiliateData');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          affData = { ...affData, ...parsed };
+        }
+      } catch (e) {}
+      affData.registered = [];
+      affData.users = [];
+      loadAllFromSupabase();
+    }
+
+    function saveData() {
+      localStorage.setItem('sharpiAffiliateData', JSON.stringify(affData));
+      saveAllToSupabase();
+    }
+
+    // ============================================================
+    // SUPABASE: LOAD ALL DATA
+    // ============================================================
+    async function loadAllFromSupabase() {
+      if (!supabaseClient) return;
+      try {
+        const { data: affiliatesData } = await supabaseClient
+          .from('affiliates')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (affiliatesData && affiliatesData.length > 0) {
+          affData.registered = affiliatesData;
+          affiliatesData.forEach(a => {
+            if (!affData.affiliates.find(local => local.code === a.code)) {
+              affData.affiliates.push({
+                id: a.id,
+                name: a.name,
+                contact: a.contact,
+                handle: a.handle || a.platform || 'N/A',
+                code: a.code,
+                createdAt: a.created_at,
+                active: a.active !== false
+              });
+            }
+          });
+        }
+
+        const { data: usersData } = await supabaseClient
+          .from('users')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (usersData && usersData.length > 0) {
+          affData.users = usersData;
+        }
+
+        const { data: salesData } = await supabaseClient.from('sales').select('*');
+        if (salesData && salesData.length > 0) {
+          salesData.forEach(s => {
+            if (!affData.sales.find(local => local.ref === s.ref)) {
+              affData.sales.push({
+                ref: s.ref,
+                userId: s.user_id,
+                userName: s.user_name,
+                package: s.package,
+                amount: s.amount,
+                promoCode: s.promo_code,
+                date: s.sale_date,
+                verified: s.verified,
+                paid: s.paid || false
+              });
+            }
+          });
+        }
+
+        const { data: payoutsData } = await supabaseClient.from('payouts').select('*');
+        if (payoutsData && payoutsData.length > 0) {
+          payoutsData.forEach(p => {
+            if (!affData.payouts.find(local => local.id === p.id)) {
+              affData.payouts.push({
+                id: p.id,
+                affiliateCode: p.affiliate_code,
+                amount: p.amount,
+                saleCount: p.sale_count,
+                date: p.payout_date
+              });
+            }
+          });
+        }
+
+        if (affiliatesData && affiliatesData.length > 0) {
+          const maxId = Math.max(...affiliatesData.map(a => a.id || 0));
+          if (maxId >= affData.affiliateIdCounter) {
+            affData.affiliateIdCounter = maxId + 1;
+          }
+        }
+
+        saveData();
+        renderAll();
+      } catch (e) { console.log('Supabase load error:', e); }
+    }
+
+    // ============================================================
+    // SUPABASE: SAVE ALL DATA
+    // ============================================================
+    async function saveAllToSupabase() {
+      if (!supabaseClient) return;
+      try {
+        for (const aff of affData.affiliates) {
+          const { data: existing } = await supabaseClient
+            .from('affiliates')
+            .select('code')
+            .eq('code', aff.code);
+
+          if (!existing || existing.length === 0) {
+            await supabaseClient.from('affiliates').insert({
+              name: aff.name,
+              contact: aff.contact,
+              handle: aff.handle,
+              code: aff.code,
+              active: aff.active
+            });
+          }
+        }
+
+        for (const sale of affData.sales) {
+          const { data: existing } = await supabaseClient
+            .from('sales')
+            .select('ref')
+            .eq('ref', sale.ref);
+
+          if (!existing || existing.length === 0) {
+            await supabaseClient.from('sales').insert({
+              ref: sale.ref,
+              user_name: sale.userName,
+              user_id: sale.userId,
+              package: sale.package,
+              amount: sale.amount,
+              promo_code: sale.promoCode || null,
+              sale_date: sale.date || new Date().toISOString(),
+              verified: sale.verified || false,
+              paid: sale.paid || false
+            });
+          }
+        }
+
+        for (const payout of affData.payouts) {
+          const { data: existing } = await supabaseClient
+            .from('payouts')
+            .select('id')
+            .eq('id', payout.id);
+
+          if (!existing || existing.length === 0) {
+            await supabaseClient.from('payouts').insert({
+              affiliate_code: payout.affiliateCode,
+              amount: payout.amount,
+              sale_count: payout.saleCount,
+              payout_date: payout.date || new Date().toISOString()
+            });
+          }
+        }
+
+        console.log('All data synced to Supabase');
+      } catch (e) { console.log('Supabase save error:', e); }
+    }
+
+    // ============================================================
+    // TOAST
+    // ============================================================
+    function showToast(msg, type = '') {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.className = 'toast show ' + type;
+      clearTimeout(el._timer);
+      el._timer = setTimeout(() => { el.className = 'toast'; }, 3000);
+    }
+
+    // ============================================================
+    // TABS
+    // ============================================================
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        const target = this.dataset.tab;
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById('section' + target.charAt(0).toUpperCase() + target.slice(1)).classList.add('active');
+        renderAll();
+      });
+    });
+
+    // ============================================================
+    // GENERATE AFFILIATE
+    // ============================================================
+    function generateAffiliate() {
+      const name = document.getElementById('genName').value.trim();
+      const contact = document.getElementById('genContact').value.trim();
+
+      if (!name) {
+        showToast('Please enter affiliate name', 'error');
+        return;
+      }
+
+      const code = generateSecureCode(name, contact);
+
+      affData.affiliates.push({
+        id: affData.affiliateIdCounter++,
+        name: name,
+        contact: contact || 'N/A',
+        handle: 'N/A',
+        code: code,
+        createdAt: new Date().toISOString(),
+        active: true
+      });
+
+      saveData();
+
+      document.getElementById('genResult').innerHTML = `
+        <div class="code-display">
+          <div class="sub">Affiliate Created!</div>
+          <div class="code">${code}</div>
+          <div style="font-size:11px; color:#666; margin:4px 0;">Share this code with your affiliate</div>
+          <button class="btn-copy" onclick="copyText('${code}')">Copy Code</button>
+        </div>
+      `;
+
+      document.getElementById('genName').value = '';
+      document.getElementById('genContact').value = '';
+
+      showToast('Generated: ' + code, 'success');
+      renderAll();
+    }
+
+    // ============================================================
+    // LETTERS <-> NUMBERS CONVERTERS
+    // ============================================================
+    function lettersToNumbers(str) {
+      if (!str) return '';
+      return str.toUpperCase().split('').map(char => {
+        const code = char.charCodeAt(0) - 64;
+        if (code >= 1 && code <= 26) return code;
+        return '';
+      }).filter(v => v !== '').join('.');
+    }
+
+    function numbersToLetters(str) {
+      if (!str) return '';
+      const map = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+      return str.replace(/\D/g, '').split('').map(digit => {
+        const num = parseInt(digit);
+        return map[num] || '0';
+      }).join('.');
+    }
+
+    function buildToken(name, phone, userId) {
+      const nameParts = name.trim().split(' ');
+      const firstName = nameParts[0] || 'Unknown';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      const firstNamePart = lettersToNumbers(firstName);
+      const lastNamePart = lastName ? lettersToNumbers(lastName) : '';
+      const phonePart = numbersToLetters(phone);
+      const userIdClean = userId.replace(/\s/g, '');
+      const idPart = numbersToLetters(userIdClean);
+
+      let token = firstNamePart;
+      if (lastNamePart) token += '_' + lastNamePart;
+      token += '_' + phonePart + '_' + idPart;
+
+      return token;
+    }
+
+    // ============================================================
+    // AUTO TOKEN GENERATOR
+    // ============================================================
+    function autoGenerateToken() {
+      const input = document.getElementById('autoPasteInput').value.trim();
+
+      if (!input) {
+        showToast('Please paste a message first', 'error');
+        return;
+      }
+
+      // Extract Name
+      let nameMatch = input.match(/Name:\s*([^\n]+)/i);
+      if (!nameMatch) nameMatch = input.match(/Name\s*([^\n]+)/i);
+      if (!nameMatch) nameMatch = input.match(/User:\s*([^\n]+)/i);
+      if (!nameMatch) nameMatch = input.match(/👤\s*([^\n]+)/i);
+      
+      // Extract Phone
+      let phoneMatch = input.match(/Phone:\s*([^\n]+)/i);
+      if (!phoneMatch) phoneMatch = input.match(/Phone\s*([^\n]+)/i);
+      if (!phoneMatch) phoneMatch = input.match(/📱\s*([^\n]+)/i);
+      if (!phoneMatch) phoneMatch = input.match(/Contact:\s*([^\n]+)/i);
+      
+      // Extract User ID
+      let idMatch = input.match(/ID:\s*([^\n]+)/i);
+      if (!idMatch) idMatch = input.match(/ID\s*([^\n]+)/i);
+      if (!idMatch) idMatch = input.match(/User ID:\s*([^\n]+)/i);
+      if (!idMatch) idMatch = input.match(/🆔\s*([^\n]+)/i);
+
+      const name = nameMatch ? nameMatch[1].trim() : '';
+      const phone = phoneMatch ? phoneMatch[1].trim().replace(/\s/g, '') : '';
+      const userId = idMatch ? idMatch[1].trim().replace(/\s/g, '') : '';
+
+      // Display extracted info
+      const infoDiv = document.getElementById('autoExtractedInfo');
+      let infoHtml = '<div class="extracted-info">';
+      infoHtml += `<div class="label">📋 Extracted Details</div>`;
+      infoHtml += `<div class="value" style="color:${name ? '#00cc44' : '#ff3333'};">👤 Name: ${name || 'Not found'}</div>`;
+      infoHtml += `<div class="value" style="color:${phone ? '#00cc44' : '#ff3333'};">📱 Phone: ${phone || 'Not found'}</div>`;
+      infoHtml += `<div class="value" style="color:${userId ? '#00cc44' : '#ff3333'};">🆔 User ID: ${userId || 'Not found'}</div>`;
+      infoHtml += '</div>';
+      infoDiv.innerHTML = infoHtml;
+
+      if (!name || !phone || !userId) {
+        showToast('Could not extract all details. Please check the format.', 'error');
+        document.getElementById('autoTokenResult').innerHTML = '';
+        return;
+      }
+
+      // Generate token
+      const token = buildToken(name, phone, userId);
+
+      document.getElementById('autoTokenResult').innerHTML = `
+        <div class="token-display">
+          <div class="sub" style="color:#888; font-size:10px;">✅ Token Generated</div>
+          <div class="token">${token}</div>
+          <button class="btn-copy" onclick="copyText('${token}')" style="border-color:#00cc44; color:#00cc44;">📋 Copy Token</button>
+          <div style="font-size:10px; color:#666; margin-top:6px;">
+            Token for: <span style="color:#00cc44;">${name}</span>
+          </div>
+        </div>
+      `;
+
+      showToast('Token generated successfully!', 'success');
+    }
+
+    // ============================================================
+    // MANUAL GENERATE ACCESS TOKEN
+    // ============================================================
+    function generateAccessToken() {
+      const name = document.getElementById('tokenName').value.trim();
+      const phone = document.getElementById('tokenPhone').value.trim();
+      const userId = document.getElementById('tokenUserId').value.trim();
+
+      if (!name || !phone || !userId) {
+        showToast('Please fill all fields', 'error');
+        return;
+      }
+
+      const token = buildToken(name, phone, userId);
+
+      document.getElementById('tokenResult').innerHTML = `
+        <div class="token-display">
+          <div class="sub" style="color:#888; font-size:10px;">Access Token Generated</div>
+          <div class="token">${token}</div>
+          <button class="btn-copy" onclick="copyText('${token}')" style="border-color:#00cc44; color:#00cc44;">Copy Token</button>
+          <div style="font-size:10px; color:#666; margin-top:6px;">Send this token to the user via WhatsApp</div>
+        </div>
+      `;
+
+      showToast('Token generated!', 'success');
+    }
+
+    // ============================================================
+    // COPY TEXT
+    // ============================================================
+    function copyText(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => showToast('Copied!', 'success'));
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('Copied!', 'success');
+      }
+    }
+
+    // ============================================================
+    // MARK PAID
+    // ============================================================
+    function markPaid(code) {
+      if (!confirm('Mark all pending sales for ' + code + ' as paid?')) return;
+
+      affData.sales.forEach(s => {
+        if (s.promoCode === code && !s.paid) {
+          s.paid = true;
+          s.paidDate = new Date().toISOString();
+        }
+      });
+
+      const sales = affData.sales.filter(s => s.promoCode === code && s.paid);
+      const total = sales.reduce((sum, s) => sum + (s.amount * 0.5), 0);
+
+      affData.payouts.push({
+        id: Date.now(),
+        affiliateCode: code,
+        amount: total,
+        saleCount: sales.length,
+        date: new Date().toISOString()
+      });
+
+      if (supabaseClient) {
+        affData.sales.forEach(async s => {
+          if (s.promoCode === code && s.paid) {
+            await supabaseClient
+              .from('sales')
+              .update({ paid: true, paid_date: new Date().toISOString() })
+              .eq('ref', s.ref);
+          }
+        });
+      }
+
+      saveData();
+      renderAll();
+      showToast('Payout marked as paid!', 'success');
+    }
+
+    // ============================================================
+    // RENDER
+    // ============================================================
+    function renderAll() {
+      renderStats();
+      renderAffiliates();
+      renderRegistered();
+      renderUsers();
+      renderSales();
+      renderPayouts();
+      renderAllCodes();
+    }
+
+    function renderStats() {
+      const totalAffiliates = affData.affiliates.length;
+      const totalUsers = affData.users.length;
+      const totalSales = affData.sales.length;
+      const totalRevenue = affData.sales.reduce((sum, s) => sum + (s.amount || 0), 0);
+
+      document.getElementById('statAffiliates').textContent = totalAffiliates;
+      document.getElementById('statUsers').textContent = totalUsers;
+      document.getElementById('statSales').textContent = totalSales;
+      document.getElementById('statRevenue').textContent = '$' + totalRevenue.toFixed(2);
+    }
+
+    function renderAffiliates() {
+      const list = document.getElementById('affiliateList');
+      const count = document.getElementById('affiliateCount');
+
+      if (affData.affiliates.length === 0) {
+        list.innerHTML = `<div class="empty-state"><div class="icon">👥</div><div class="text">No affiliates yet.</div></div>`;
+        count.textContent = '0';
+        return;
+      }
+
+      count.textContent = affData.affiliates.length;
+
+      let html = '';
+      affData.affiliates.forEach(a => {
+        const sales = affData.sales.filter(s => s.promoCode === a.code);
+        const earnings = sales.reduce((sum, s) => sum + (s.amount * 0.5), 0);
+        html += `
+          <div class="affiliate-item">
+            <div class="affiliate-info">
+              <div class="affiliate-name">${a.name}</div>
+              <div class="affiliate-code">${a.code}</div>
+              <div class="affiliate-contact">${a.contact} ${a.handle !== 'N/A' ? '| ' + a.handle : ''}</div>
+            </div>
+            <div class="affiliate-stats">
+              <div class="affiliate-sales">${sales.length} sales</div>
+              <div class="affiliate-earnings">$${earnings.toFixed(2)}</div>
+              <span class="affiliate-status">${a.active ? 'Active' : 'Inactive'}</span>
+            </div>
+          </div>
+        `;
+      });
+      list.innerHTML = html;
+    }
+
+    function renderRegistered() {
+      const list = document.getElementById('registeredList');
+      const count = document.getElementById('registeredCount');
+
+      const registered = affData.registered || [];
+
+      if (registered.length === 0) {
+        list.innerHTML = `<div class="empty-state"><div class="icon">📋</div><div class="text">No affiliates registered via Linkmeup yet.</div></div>`;
+        count.textContent = '0';
+        return;
+      }
+
+      count.textContent = registered.length;
+
+      let html = '';
+      registered.forEach(a => {
+        const sales = affData.sales.filter(s => s.promoCode === a.code);
+        const earnings = sales.reduce((sum, s) => sum + (s.amount * 0.5), 0);
+        html += `
+          <div class="affiliate-item">
+            <div class="affiliate-info">
+              <div class="affiliate-name">${a.name}</div>
+              <div class="affiliate-code">${a.code}</div>
+              <div class="affiliate-contact">
+                ${a.contact} ${a.handle ? '| ' + a.handle : ''}
+                ${a.platform ? '| ' + a.platform : ''}
+              </div>
+            </div>
+            <div class="affiliate-stats">
+              <div class="affiliate-sales">${sales.length} sales</div>
+              <div class="affiliate-earnings">$${earnings.toFixed(2)}</div>
+              <span class="affiliate-status">${a.active !== false ? 'Active' : 'Inactive'}</span>
+            </div>
+          </div>
+        `;
+      });
+      list.innerHTML = html;
+    }
+
+    function renderUsers() {
+      const list = document.getElementById('userList');
+      const count = document.getElementById('userCount');
+
+      const users = affData.users || [];
+
+      if (users.length === 0) {
+        list.innerHTML = `<div class="empty-state"><div class="icon">👤</div><div class="text">No users yet.</div></div>`;
+        count.textContent = '0';
+        return;
+      }
+
+      count.textContent = users.length;
+
+      let html = '';
+      users.forEach(u => {
+        const userSales = affData.sales.filter(s => s.userId === u.id);
+        const statusClass = u.verified ? 'verified' : 'pending';
+        const statusText = u.verified ? 'Verified' : 'Pending';
+        html += `
+          <div class="user-item">
+            <div class="user-info">
+              <div class="user-name">${u.name || 'Unknown'}</div>
+              <div class="user-details">
+                ${u.email || ''} ${u.whatsapp ? '| ' + u.whatsapp : ''}
+                ${u.id ? '| ID: ' + u.id : ''}
+                ${userSales.length > 0 ? '| Sales: ' + userSales.length : ''}
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <span class="user-status ${statusClass}">${statusText}</span>
+              ${u.package ? '<div style="font-size:9px; color:#888; margin-top:2px;">' + u.package + '</div>' : ''}
+            </div>
+          </div>
+        `;
+      });
+      list.innerHTML = html;
+    }
+
+    function renderSales() {
+      const list = document.getElementById('salesList');
+      const count = document.getElementById('saleCount');
+
+      if (affData.sales.length === 0) {
+        list.innerHTML = `<div class="empty-state"><div class="icon">🛒</div><div class="text">No sales yet.</div></div>`;
+        count.textContent = '0';
+        return;
+      }
+
+      count.textContent = affData.sales.length;
+
+      let html = '';
+      const sorted = [...affData.sales].reverse();
+      sorted.forEach(s => {
+        const aff = affData.affiliates.find(a => a.code === s.promoCode);
+        const regAff = affData.registered.find(a => a.code === s.promoCode);
+        const owner = aff || regAff;
+        const ownerName = owner ? owner.name : 'Unknown Affiliate';
+        
+        const commission = s.amount ? (s.amount * 0.5).toFixed(2) : '0.00';
+        const status = s.paid ? 'Paid' : 'Pending';
+        const badgeClass = s.paid ? 'badge-paid' : 'badge-pending';
+        html += `
+          <div class="sale-item">
+            <div class="sale-info">
+              <div class="sale-user">${s.userName || 'Unknown'}</div>
+              <div class="sale-details">
+                <span class="pkg">${s.package || 'Package'}</span>
+                ${s.promoCode ? '• Code: ' + s.promoCode : ''}
+                <span class="owner">• Owner: ${ownerName}</span>
+              </div>
+            </div>
+            <div class="sale-right">
+              <div class="sale-amount">$${(s.amount || 0).toFixed(2)}</div>
+              <div class="sale-commission">$ ${commission}</div>
+              <span class="${badgeClass}">${status}</span>
+            </div>
+          </div>
+        `;
+      });
+      list.innerHTML = html;
+    }
+
+    function renderPayouts() {
+      const list = document.getElementById('payoutsList');
+
+      const pendingAffiliates = affData.affiliates.filter(a => {
+        const sales = affData.sales.filter(s => s.promoCode === a.code && !s.paid);
+        return sales.length > 0;
+      });
+
+      if (pendingAffiliates.length === 0) {
+        list.innerHTML = `<div class="empty-state"><div class="icon">✅</div><div class="text">No pending payouts.</div></div>`;
+        return;
+      }
+
+      let html = '';
+      pendingAffiliates.forEach(a => {
+        const sales = affData.sales.filter(s => s.promoCode === a.code && !s.paid);
+        const total = sales.reduce((sum, s) => sum + (s.amount * 0.5), 0);
+        html += `
+          <div class="payout-item">
+            <div>
+              <div class="payout-affiliate">${a.name}</div>
+              <div class="payout-code">${a.code}</div>
+              <div style="font-size:10px; color:#555;">${sales.length} pending sales</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="payout-amount">$${total.toFixed(2)}</div>
+              <button class="btn-pay" onclick="markPaid('${a.code}')">Mark Paid</button>
+            </div>
+          </div>
+        `;
+      });
+      list.innerHTML = html;
+    }
+
+    function renderAllCodes() {
+      const list = document.getElementById('allCodesList');
+      if (affData.affiliates.length === 0) {
+        list.innerHTML = `<div class="empty-state" style="padding:12px 0;"><div class="text">No codes generated yet.</div></div>`;
+        return;
+      }
+
+      let html = '';
+      affData.affiliates.forEach(a => {
+        const sales = affData.sales.filter(s => s.promoCode === a.code).length;
+        html += `
+          <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+            <span style="color:#ffd700; font-family:monospace;">${a.code}</span>
+            <span style="color:#666;">${a.name} • ${sales} sales</span>
+            <button class="btn-copy" onclick="copyText('${a.code}')" style="background:transparent; border:none; color:#ffd700; cursor:pointer; font-size:11px;">Copy</button>
+          </div>
+        `;
+      });
+      list.innerHTML = html;
+    }
+
+    // ============================================================
+    // AUTO REFRESH
+    // ============================================================
+    setInterval(() => {
+      loadData();
+      renderAll();
+    }, 10000);
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    loadData();
+    console.log('SHARPI Admin loaded');
+    console.log('Affiliates:', affData.affiliates.length);
+    console.log('Registered:', affData.registered.length);
+    console.log('Users:', affData.users.length);
+    console.log('Sales:', affData.sales.length);
+  </script>
+
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+</body></html>
