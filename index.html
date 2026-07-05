@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,15 +14,18 @@
     }
 
     body {
-        background-color: #141516;
+        background-color: #0d0d0d;
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
 
     .app {
-        max-width: 412px;
-        width: 100%;
-        margin: 0 auto;
-        background-color: #141516;
+        width: 100vw;
+        max-width: 100vw;
+        margin: 0;
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+        box-sizing: border-box;
+        background-color: #0d0d0d;
         min-height: 100vh;
         padding-bottom: 20px;
         position: relative;
@@ -186,15 +188,11 @@
     }
 
     .tab-active {
-        background-color: #2c2d30;
-        border-radius: 40px;
-        padding: 8px 24px;
         cursor: pointer;
         color: white;
     }
 
     .tab-inactive {
-        padding: 8px 0;
         cursor: pointer;
         color: #9ea0a5;
     }
@@ -315,7 +313,7 @@
 
     .crash-value {
         font-size: 75px;
-        font-weight: 750;
+        font-weight: 650;
         transition: all 0.016s linear;
         font-feature-settings: "tnum";
         font-variant-numeric: tabular-nums;
@@ -334,64 +332,45 @@
         25% { transform: translateX(-5px); }
         75% { transform: translateX(5px); }
     }
-
-    #gameCanvasContainer {
-        background: #0a0e0f;
-        height: 260px !important;
-        min-height: 260px !important;
-        margin: 0 16px 12px 16px;
-        border-radius: 12px;
-        position: relative;
-        overflow: hidden;
-        flex-shrink: 0;
-        display: block !important;
-    }
-
-    #gameCanvas {
-        display: block !important;
-        width: 100% !important;
-        height: 260px !important;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 3;
-    }
-
-    #bgLayer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-        pointer-events: none;
-        overflow: hidden;
-    }
-
-    #bgLayer > div {
-        will-change: transform;
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-    }
-
     @keyframes swirlBackground {
         0% { transform: translateZ(0) rotate(0deg) scale(1); }
         100% { transform: translateZ(0) rotate(360deg) scale(1.05); }
     }
 
-    #glowLayer {
+    #gameCanvasContainer {
+        background: #0a0e0f;
+        height: 180px !important;
+        min-height: 180px !important;
+        margin: 0 8px 12px 8px;
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+        flex-shrink: 0;
+        display: block !important;
+        background-color: #0a0e0f;
+        border: 1px solid rgba(255, 255, 255, 0.192);
+    }
+
+    #gameCanvas {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
+        z-index: 3;
+        pointer-events: none;
+        display: block !important;
+    }
+
+    #darkOverlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
         z-index: 1;
         pointer-events: none;
-        background-size: cover;
-        background-position: center;
-        opacity: 0.3;
-        transition: opacity 0.5s ease;
-        mix-blend-mode: screen;
     }
 
     #countdownOverlay {
@@ -441,15 +420,18 @@
         font-variant-numeric: tabular-nums;
         text-shadow: 0 0 20px rgba(220,38,38,0.2);
     }
-
     #countdownAircraft {
         position: absolute;
         bottom: 10px;
         left: 7px;
         width: 110px;
         height: auto;
-        opacity: 1.4;
+        opacity: 1;
         animation: countdownFloat 2s ease-in-out infinite;
+        display: block !important;
+        visibility: visible !important;
+        pointer-events: none;
+        z-index: 4;
     }
 
     @keyframes countdownFloat {
@@ -554,288 +536,360 @@
         font-size: 13px;
         color: #9ea0a5;
     }
-/* Force UI elements above canvas */
-.bet-button,
-.bet-card,
-.tabs,
-.summary-panel,
-#activityContainer,
-.footer {
-    position: relative;
-    z-index: 100 !important;
-}
 
-#betBtn1, #betBtn2 {
-    position: relative;
-    z-index: 100 !important;
-}
+    /* Force UI elements above canvas */
+    .bet-button,
+    .bet-card,
+    .tabs,
+    .summary-panel,
+    #activityContainer,
+    .footer {
+        position: relative;
+        z-index: 100 !important;
+    }
 
-#betAmountInput, #betAmountInput2 {
-    position: relative;
-    z-index: 100 !important;
-}
-/* Restore visibility of all UI elements */
-.app > div:not(#gameCanvasContainer) {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    height: auto !important;
-    position: relative !important;
-    z-index: 10 !important;
-}
+    #betBtn1, #betBtn2 {
+        position: relative;
+        z-index: 100 !important;
+    }
 
-#gameCanvasContainer {
-    flex-shrink: 0 !important;
-    height: 260px !important;
-}
+    #betAmountInput, #betAmountInput2 {
+        position: relative;
+        z-index: 100 !important;
+    }
+
+    /* Restore visibility of all UI elements */
+    .app > div:not(#gameCanvasContainer):not(.header-container) {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        position: relative !important;
+        z-index: 10 !important;
+    }
+
+    .header-container {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: 60px !important;
+        position: static !important;
+        z-index: 50 !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Remove absolute positioning from logo */
+    .app img[alt="Logo"] {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+    }
+
+    #gameCanvasContainer {
+        flex-shrink: 0 !important;
+        height: 260px !important;
+    }
+
+    .multiplier-display {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 5;
+        text-align: center;
+        pointer-events: none;
+        width: 100%;
+    }
+
+    .countdown-bar-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 3;
+    }
+
+    .countdown-bar {
+        background: #28a71d;
+        width: 0%;
+        height: 7px;
+        transition: width 0.05s linear;
+    }
+
+    /* Hide green loading bars */
+    #countdownBar {
+        display: none !important;
+    }
+    
+    #roundProgress {
+        display: none !important;
+    }
 </style>
 </head>
 <body><div class="app">
-
-    <!-- HEADER -->
-<div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 10px; background: #141516; width: 100%; position: relative; z-index: 50; box-sizing: border-box; height: 70px;">
-    <!-- LOGO - LEFT -->
-    <div style="flex-shrink: 0;">
-        <img src="assets/logo.png" alt="Logo" style="position: absolute; top: 4px; left: 49px; height: 30px; width: auto; display: block; z-index: 50;">
-    <!-- RIGHT: Balance + Menu + Message -->
-    <div style="display: flex; align-items: center; gap: 20px; margin-left: 60%; flex-shrink: 0;">
-        <div style="display: flex; align-items: baseline; gap: 0px;">
-            <span style="color: #2de313; font-weight: 700; font-size: 18px;" id="userBalance">5000.00</span>
-            <span style="color: #9ea0a5; font-size: 15px;">UGX</span>
+       <!-- HEADER -->
+       <div class="header-container" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #272727; width: 100%; box-sizing: border-box; height: 30px; border-bottom: 0px solid #121213; margin-top: -22px;">
+        <!-- LOGO - LEFT -->
+        <img src="./assets/logo-DdzMSAUV.png" alt="Logo" style="height: 30px; width: auto; display: block; flex-shrink: 0; margin-top: 27px;">
+        
+        <!-- RIGHT: Balance + UGX + Menu + Message -->
+        <div style="display: flex; align-items: center; gap: 1px; flex-shrink: 0; margin-top: 27px;">
+            <!-- Balance -->
+            <div style="display: flex; align-items: baseline; gap: 2px;">
+                <span style="color: #2de313; font-weight: 450; font-size: 14px;" id="userBalance">5000.00</span>
+                <span style="color: #9ea0a5; font-size: 13px; font-weight: 500;">UGX</span>
+            </div>
+            
+            <!-- Menu Button (Hamburger) -->
+            <div id="menuButton" onclick="openDashboard()" style="display: flex; flex-direction: column; gap: 3px; cursor: pointer; padding: 4px;">
+                <div style="width: 15px; height: 2px; background: #9ea0a5; border-radius: 2px;"></div>
+                <div style="width: 15px; height: 2px; background: #9ea0a5; border-radius: 2px;"></div>
+                <div style="width: 15px; height: 2px; background: #9ea0a5; border-radius: 2px;"></div>
+            </div>
+            
+            <!-- Message Bubble Icon -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="cursor: pointer; flex-shrink: 0;">
+                <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z" stroke="#9ea0a5" stroke-width="1.5" fill="none" />
+                <circle cx="16" cy="10" r="1.5" fill="#9ea0a5" />
+                <circle cx="12" cy="10" r="1.5" fill="#9ea0a5" />
+                <circle cx="8" cy="10" r="1.5" fill="#9ea0a5" />
+            </svg>
         </div>
-        <div id="menuButton" onclick= "openDashboard()" style="width: -20px; height: 10px; display: flex; flex-direction: column; gap: 3px; cursor: pointer;">
-            <div style="width: 20px; height: 2px; background: #9ea0a5;"></div>
-            <div style="width: 20px; height: 2px; background: #9ea0a5;"></div>
-            <div style="width: 20px; height: 2px; background: #9ea0a5;"></div>
-        </div>
-        <svg width="0" height="0" viewBox="0 0 24 24" fill="none">
-            <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z" stroke="#9ea0a5" stroke-width="1.5" fill="none" />
-            <circle cx="16" cy="10" r="1.5" fill="#9ea0a5" />
-            <circle cx="12" cy="10" r="1.5" fill="#9ea0a5" />
-            <circle cx="8" cy="10" r="1.5" fill="#9ea0a5" />
-        </svg>
     </div>
-</div>
-    <!-- MULTIPLIER RIBBON -->
-    <div style="background: rgba(2, 2, 2, 0.089); height: 16px; width: 100%; margin-left: 30px; display: flex; align-items: center; justify-content: center; gap: 1px; overflow-x: auto; padding: 0 1px;" id="multiplierRibbon">
-        <span style="font-weight: 700; color: #28a71d; font-size: 13px;">2.50x</span>
-        <span style="font-weight: 700; font-size: 13px;">1.80x</span>
-        <span style="font-weight: 700; color: #28a71d; font-size: 13px;">3.20x</span>
-        <span style="font-weight: 700; font-size: 13px;">1.20x</span>
-    
-        <span style="font-weight: 700; font-size: 13px;">1.80x</span>
-        <span style="font-weight: 700; color: #28a71d; font-size: 13px;">3.20x</span>
-        <span style="font-weight: 700; font-size: 13px;">1.20x</span>
-    </div>
-
-    <!-- GAME CANVAS -->
-    <div id="gameCanvasContainer">
-        <div id="bgLayer">
-            <div style="width: 430%; height: 340%; background-image: url('assets/bg-optical.png'); background-size: cover; background-position: center; transform-origin: 50% 50%; position: absolute; bottom: -450px; left: -820px ; animation: swirlBackground 15s linear infinite; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden;"></div>
+         <!-- MULTIPLIER RIBBON -->
+   
+        <!-- MULTIPLIER RIBBON -->
+        <div style="background: transparent; height: 24px; width: calc(100% - 16px); margin: 0 8px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-evenly; overflow-x: visible; padding: 0 8px; gap: 8px; flex-wrap: nowrap;" id="multiplierRibbon"></div>
+    <!-- GAME CANVAS CONTAINER -->
+         
+     <!-- GAME CANVAS CONTAINER -->
+     <div id="gameCanvasContainer">
+        <!-- Spinning Background Layer -->
+        <div id="bgLayer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden;">
+            <div style="width: 430%; height: 340%; background-image: url('./assets/bg-optical-ucyS_AsR.png'); background-size: cover; background-position: center; transform-origin: 50% 50%; position: absolute; bottom: -450px; left: -820px; animation: swirlBackground 15s linear infinite; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden;"></div>
         </div>
-        <div style=" position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2; pointer-events: none;"></div>
-        <div id="glowLayer"></div>
-        <canvas id="gameCanvas"></canvas>
-        <div style="position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.2); height: 4px; z-index: 3;">
-            <div id="countdownBar" style="background: #28a71d; width: 0%; height: 7px; transition: width 0.05s linear;"></div>
-        </div>
-        <div style="position: absolute; top: 70px; left: 50%; transform: translateX(-50%); z-index: 5; text-align: center; pointer-events: none;">
-            <div id="crashValue" class="crash-value" style="text-align: centre; display: block; width: 100%;">1.00x</div>
+        <!-- Dark Overlay -->
+        <div id="darkOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.568); z-index: 1; pointer-events: none;"></div>
+        <!-- Electronic Glow Layer (above dark overlay) -->
+        <div id="glowLayer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; transition: all 0.3s ease; opacity: 0.3; mix-blend-mode: screen;"></div>
+                <!-- Canvas for J‑curve trail -->
+                <canvas id="gameCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none;"></canvas>
+        <!-- Multiplier Display -->
+        <div class="multiplier-display">
+            <div id="crashValue" class="crash-value">1.00x</div>
             <div id="crashMessage" style="font-size: 17px; font-weight: 700; color: #9b9999; margin-top: -95px; display: none; text-shadow: 0 0 20px rgba(220, 38, 38, 0.5);">FLEW AWAY!</div>
             <div style="font-size: 0px; color: #6b728000; margin-top: 2px;" id="roundTimer">Next round starting...</div>
         </div>
+
+        <!-- Status -->
         <div style="position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 5; pointer-events: none;">
             <div style="font-size: 14px; color: #766b8004; font-weight: 500;" id="roundStatus">Waiting</div>
-            </div>
-            <div id="countdownOverlay">
-                <img id="countdownImage" src="assets/countdown.png" alt="Countdown">
+        </div>
+
+        <!-- Countdown Bar -->
+        <div class="countdown-bar-container">
+            <div id="countdownBar" class="countdown-bar"></div>
+        </div>
+
+               <!-- Countdown Overlay -->
+               <div id="countdownOverlay">
+                <img id="countdownImage" src="./assets/countdown-CgWljvdQ.png" alt="Countdown">
                 <div style="width: 30%; height: 6px; background: #1a1a1a; border-radius: 3px; overflow: hidden; position: relative; border: 1px solid #2a2a2a;">
                     <div id="countdownBarFill"></div>
                 </div>
                 <div id="countdownText"></div>
-                <img id="countdownAircraft" src="assets/aircraft.png" alt="Aircraft">
-                <div id="countdownStats" style="
-                    position: absolute;
-                    bottom: 65px;
-                    right: 7px;
-                    display: none;
-                    z-index: 11;
-                ">
-                    <div style="display: flex; align-items: center; gap: 0;">
-                        <img id="pfp1" src="assets/pfp1.png" alt="PFP" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid #141516; margin-left: -2px; object-fit: cover;">
-                        <img id="pfp2" src="assets/pfp2.png" alt="PFP" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid #141516; margin-left: -2px; object-fit: cover;">
-                        <img id="pfp3" src="assets/pfp3.png" alt="PFP" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid #141516; margin-left: -2px; object-fit: cover;">
-                        <span id="countdownBetCount" style="color: #ffffff; font-size: 13px; font-weight: 350; margin-left: 10px;">0</span>
-                    </div>
+            </div>
+            
+            <!-- COUNTDOWN STATS - MOVED OUTSIDE OVERLAY SO IT PERSISTS -->
+            <div id="countdownStats" style="position: absolute; bottom: 5px; right: 7px; display: none; z-index: 11;">
+                <div style="display: flex; align-items: center; gap: 2px; background: #2c2d30; border-radius: 16px; padding: 4px 10px;">
+                    <img id="pfp1" src="./assets/pfp1-D9l7zZI0.png" alt="PFP" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid #0bdf15; margin-left: -3px; object-fit: cover;">
+                    <img id="pfp2" src="./assets/pfp2-Dz4hxjT8.png" alt="PFP" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid #0fe708; margin-left: -3px; object-fit: cover;">
+                    <img id="pfp3" src="./assets/pfp3-D9oING0A.png" alt="PFP" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid #6bcf07; margin-left: -3px; object-fit: cover;">
+                    <span id="countdownBetCount" style="color: #ffffff; font-size: 11px; font-weight: 400; margin-left: 2px;">0</span>
                 </div>
+            </div>
+            
+            
+            
+            <!-- AIRCRAFT - MOVED OUTSIDE OVERLAY SO IT PERSISTS -->
+            <img id="countdownAircraft" src="./assets/aircraft-BQ5McGkT.png" alt="Aircraft" style="position: absolute; bottom: 10px; left: 7px; width: 110px; height: auto; opacity: 1; animation: countdownFloat 2s ease-in-out infinite; display: block !important; visibility: visible !important; pointer-events: none; z-index: 4;">
+     </div>
+
+     <!-- BET CARD 1 -->
+     <div style="background: #1b1c1d; margin: 0 4px 8px 4px; padding: 6px 8px; border-radius: 12px;">
+        <div style="display: flex; justify-content: center; margin-bottom: 6px;">
+            <div style="background: #141516; border-radius: 40px; display: flex; width: 160px;">
+                <div style="flex: 1; background: #2c2d30; border-radius: 40px; padding: 4px 0; text-align: center;"><span style="color: white; font-weight: 600; font-size: 12px;">Bet</span></div>
+                <div id="autoToggle1" style="flex: 1; padding: 4px 0; text-align: center; cursor: pointer;"><span style="color: #9ea0a5; font-weight: 500; font-size: 12px;">Auto</span></div>
             </div>
         </div>
-    
-        <!-- BET CARD 1 -->
-        <div style="background: #1b1c1d; margin: 0 16px 12px 16px; padding: 12px; border-radius: 12px;">
-            <div style="display: flex; justify-content: center; margin-bottom: 16px;">
-                <div style="background: #141516; border-radius: 40px; display: flex; width: 160px;">
-                    <div style="flex: 1; background: #2c2d30; border-radius: 40px; padding: 6px 0; text-align: center;"><span style="color: white; font-weight: 600; font-size: 13px;">Bet</span></div>
-                    <div id="autoToggle1" style="flex: 1; padding: 6px 0; text-align: center; cursor: pointer;"><span style="color: #9ea0a5; font-weight: 500; font-size: 13px;">Auto</span></div>
+        <div style="display: flex; gap: 6px;">
+            <div style="flex: 0.8;">
+                <div style="background: #141516; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; padding: 2px 6px; margin-bottom: 6px;">
+                    <div class="amount-pill" onclick="adjustAmount(-1000)" style="background: #2c2d30; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; cursor: pointer; font-size: 14px; flex-shrink: 0;">−</div>
+                    <input type="text" id="betAmountInput" value="1,000" class="amount-input" onblur="updateAmount()" onkeypress="if(event.key==='Enter') this.blur()" style="font-size: 16px; width: 50px;">
+                    <div class="amount-pill" onclick="adjustAmount(1000)" style="background: #2c2d30; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; cursor: pointer; font-size: 14px; flex-shrink: 0;">+</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+                    <div class="amount-pill" onclick="setQuickAmount(1000)" style="background: #141516; border-radius: 20px; padding: 2px 8px; text-align: center; cursor: pointer;"><span style="color: white; font-size: 10px;">1,000</span></div>
+                    <div class="amount-pill" onclick="setQuickAmount(2000)" style="background: #141516; border-radius: 20px; padding: 2px 8px; text-align: center; cursor: pointer;"><span style="color: white; font-size: 10px;">2,000</span></div>
+                    <div class="amount-pill" onclick="setQuickAmount(5000)" style="background: #141516; border-radius: 20px; padding: 2px 8px; text-align: center; cursor: pointer;"><span style="color: white; font-size: 10px;">5,000</span></div>
+                    <div class="amount-pill" onclick="setQuickAmount(10000)" style="background: #141516; border-radius: 20px; padding: 2px 8px; text-align: center; cursor: pointer;"><span style="color: white; font-size: 10px;">10,000</span></div>
                 </div>
             </div>
-            <div style="display: flex; gap: 12px;">
-                <div style="flex: 1.3;">
-                    <div style="background: #141516; border-radius: 40px; display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; margin-bottom: 10px;">
-                        <div class="amount-pill" onclick="adjustAmount(-1000)" style="background: #2c2d30; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; cursor: pointer;">−</div>
-                        <input type="text" id="betAmountInput" value="1,000" class="amount-input" onblur="updateAmount()" onkeypress="if(event.key==='Enter') this.blur()">
-                        <div class="amount-pill" onclick="adjustAmount(1000)" style="background: #2c2d30; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; cursor: pointer;">+</div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <div class="amount-pill" onclick="setQuickAmount(1000)" style="background: #141516; border-radius: 6px; padding: 8px; text-align: center; cursor: pointer;"><span style="color: white;">1,000</span></div>
-                        <div class="amount-pill" onclick="setQuickAmount(2000)" style="background: #141516; border-radius: 6px; padding: 8px; text-align: center; cursor: pointer;"><span style="color: white;">2,000</span></div>
-                        <div class="amount-pill" onclick="setQuickAmount(5000)" style="background: #141516; border-radius: 6px; padding: 8px; text-align: center; cursor: pointer;"><span style="color: white;">5,000</span></div>
-                        <div class="amount-pill" onclick="setQuickAmount(10000)" style="background: #141516; border-radius: 6px; padding: 8px; text-align: center; cursor: pointer;"><span style="color: white;">10,000</span></div>
-                    </div>
-                </div>
-                <div class="bet-button" id="betBtn1" onclick="handlePlaceBet(1)" style="flex: 0.9; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                    <span style="font-weight: 800; font-size: 22px;" id="betText1">Bet</span>
-                    <span style="font-weight: 500; font-size: 12px;" id="betAmountDisplay">1,000 UGX</span>
-                    <span style="font-weight: 400; font-size: 10px; display: none;" id="betSubtext1"></span>
-                </div>
+            <div class="bet-button" id="betBtn1" onclick="handlePlaceBet(1)" style="flex: 1.2; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.4); min-height: 60px; border-radius: 6px; padding: 2px 0;">
+                <span style="font-weight: 800; font-size: 18px;" id="betText1">Bet</span>
+                <span style="font-weight: 500; font-size: 10px;" id="betAmountDisplay">1,000 UGX</span>
+                <span style="font-weight: 400; font-size: 8px; display: none;" id="betSubtext1"></span>
             </div>
         </div>
-    
-        <!-- BET CARD 2 -->
-        <div style="background: #1b1c1d; margin: 0 16px 12px 16px; padding: 12px; border-radius: 12px; position: relative;">
-            <div style="position: absolute; top: 12px; right: 12px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ea0a5" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" /><line x1="9" y1="4" x2="9" y2="20" /><line x1="15" y1="4" x2="15" y2="20" /></svg>
-            </div>
-            <div style="display: flex; justify-content: center; margin-bottom: 16px;">
-                <div style="background: #141516; border-radius: 40px; display: flex; width: 160px;">
-                    <div style="flex: 1; background: #2c2d30; border-radius: 40px; padding: 6px 0; text-align: center;"><span style="color: white; font-weight: 600; font-size: 13px;">Bet</span></div>
-                    <div id="autoToggle2" style="flex: 1; padding: 6px 0; text-align: center; cursor: pointer;"><span style="color: #9ea0a5; font-weight: 500; font-size: 13px;">Auto</span></div>
-                </div>
-            </div>
-            <div style="display: flex; gap: 12px;">
-                <div style="flex: 1.3;">
-                    <div style="background: #141516; border-radius: 40px; display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; margin-bottom: 10px;">
-                        <div class="amount-pill" onclick="adjustAmount2(-1000)" style="background: #2c2d30; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; cursor: pointer;">−</div>
-                        <input type="text" id="betAmountInput2" value="1,000" class="amount-input" onblur="updateAmount2()" onkeypress="if(event.key==='Enter') this.blur()">
-                        <div class="amount-pill" onclick="adjustAmount2(1000)" style="background: #2c2d30; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; cursor: pointer;">+</div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <div class="amount-pill" onclick="setQuickAmount2(1000)" style="background: #141516; border-radius: 6px; padding: 8px; text-align: center; cursor: pointer;"><span style="color: white;">1,000</span></div>
-                        <div class="amount-pill" onclick="setQuickAmount2(2000)" style="background: #141516; border-radius: 6px; padding: 8px; text-align: center; cursor: pointer;"><span style="color: white;">2,000</span></div>
-                        <div class="amount-pill" onclick="setQuickAmount2(5000)" style="background: #141516; border-radius: 6px; padding: 8px; text-align: center; cursor: pointer;"><span style="color: white;">5,000</span></div>
-                        <div class="amount-pill" onclick="setQuickAmount2(10000)" style="background: #141516; border-radius: 6px; padding: 8px; text-align: center; cursor: pointer;"><span style="color: white;">10,000</span></div>
-                    </div>
-                </div>
-                <div class="bet-button" id="betBtn2" onclick="handlePlaceBet(2)" style="flex: 0.9; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                    <span style="font-weight: 800; font-size: 22px;" id="betText2">Bet</span>
-                    <span style="font-weight: 500; font-size: 12px;" id="betAmountDisplay2">1,000 UGX</span>
-                    <span style="font-weight: 400; font-size: 10px; display: none;" id="betSubtext2"></span>
-                </div>
+    </div>
+
+       <!-- BET CARD 2 -->
+       <div style="background: #1b1c1d; margin: 0 4px 8px 4px; padding: 6px 8px; border-radius: 12px; position: relative;">
+        <div style="position: absolute; top: 8px; right: 8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ea0a5" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" /><line x1="9" y1="4" x2="9" y2="20" /><line x1="15" y1="4" x2="15" y2="20" /></svg>
+        </div>
+        <div style="display: flex; justify-content: center; margin-bottom: 6px;">
+            <div style="background: #141516; border-radius: 40px; display: flex; width: 160px;">
+                <div style="flex: 1; background: #2c2d30; border-radius: 40px; padding: 4px 0; text-align: center;"><span style="color: white; font-weight: 600; font-size: 12px;">Bet</span></div>
+                <div id="autoToggle2" style="flex: 1; padding: 4px 0; text-align: center; cursor: pointer;"><span style="color: #9ea0a5; font-weight: 500; font-size: 12px;">Auto</span></div>
             </div>
         </div>
-    
+        <div style="display: flex; gap: 6px;">
+            <div style="flex: 0.8;">
+                <div style="background: #141516; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; padding: 2px 6px; margin-bottom: 6px;">
+                    <div class="amount-pill" onclick="adjustAmount2(-1000)" style="background: #2c2d30; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; cursor: pointer; font-size: 14px; flex-shrink: 0;">−</div>
+                    <input type="text" id="betAmountInput2" value="1,000" class="amount-input" onblur="updateAmount2()" onkeypress="if(event.key==='Enter') this.blur()" style="font-size: 16px; width: 50px;">
+                    <div class="amount-pill" onclick="adjustAmount2(1000)" style="background: #2c2d30; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; cursor: pointer; font-size: 14px; flex-shrink: 0;">+</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+                    <div class="amount-pill" onclick="setQuickAmount2(1000)" style="background: #141516; border-radius: 20px; padding: 2px 8px; text-align: center; cursor: pointer;"><span style="color: white; font-size: 10px;">1,000</span></div>
+                    <div class="amount-pill" onclick="setQuickAmount2(2000)" style="background: #141516; border-radius: 20px; padding: 2px 8px; text-align: center; cursor: pointer;"><span style="color: white; font-size: 10px;">2,000</span></div>
+                    <div class="amount-pill" onclick="setQuickAmount2(5000)" style="background: #141516; border-radius: 20px; padding: 2px 8px; text-align: center; cursor: pointer;"><span style="color: white; font-size: 10px;">5,000</span></div>
+                    <div class="amount-pill" onclick="setQuickAmount2(10000)" style="background: #141516; border-radius: 20px; padding: 2px 8px; text-align: center; cursor: pointer;"><span style="color: white; font-size: 10px;">10,000</span></div>
+                </div>
+            </div>
+            <div class="bet-button" id="betBtn2" onclick="handlePlaceBet(2)" style="flex: 1.2; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.4); min-height: 60px; border-radius: 6px; padding: 2px 0;">
+                <span style="font-weight: 800; font-size: 18px;" id="betText2">Bet</span>
+                <span style="font-weight: 500; font-size: 10px;" id="betAmountDisplay2">1,000 UGX</span>
+                <span style="font-weight: 400; font-size: 8px; display: none;" id="betSubtext2"></span>
+            </div>
+        </div>
+    </div>
+       <!-- ACTIVITY CARD -->
+       <div style="background: #1b1c1d; margin: 8px 8px 12px 8px; padding: 12px 12px 8px 12px; border-radius: 12px;">
+       
         <!-- TABS -->
-        <div style="margin: 8px 16px 12px 16px;">
-            <div style="display: flex; gap: 16px;">
-                <div id="tabAll" class="tab-active" onclick="switchTab('all')"><span style="font-weight: 600;">All Bets</span></div>
-                <div id="tabPrev" class="tab-inactive" onclick="switchTab('prev')"><span style="font-weight: 500;">Previous</span></div>
-                <div id="tabTop" class="tab-inactive" onclick="switchTab('top')"><span style="font-weight: 500;">Top</span></div>
-            </div>
-        </div>
-    
-        <!-- SUMMARY PANEL -->
-        <div style="margin: 0 16px 12px 16px;">
-            <div style="display: flex; justify-content: space-between;">
-                <div>
-                    <div style="display: flex; margin-bottom: 8px;">
-                        <div style="width: 32px; height: 32px; background: #3a6ea5; border-radius: 50%; border: 2px solid #141516; margin-right: -8px;"></div>
-                        <div style="width: 32px; height: 32px; background: #5a67d8; border-radius: 50%; border: 2px solid #141516; margin-right: -8px;"></div>
-                        <div style="width: 32px; height: 32px; background: #48bb78; border-radius: 50%; border: 2px solid #141516;"></div>
-                    </div>
-                    <span style="color: #9ea0a5;" id="betCounter">0/0 Bets</span>
+        <div style="margin: 0 0 12px 0;">
+            <div style="display: flex; gap: 4px; background: #141516; border-radius: 20px; padding: 3px; width: 100%;">
+                <div id="tabAll" class="tab-active" onclick="switchTab('all')" style="flex: 1; background: #2c2d30; border-radius: 18px; padding: 6px 0; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+                    <span style="font-weight: 400; font-size: 12px; color: white;">All Bets</span>
                 </div>
-                <div style="text-align: right;">
-                    <div style="color: white; font-weight: 700; font-size: 20px;" id="totalPayout" class="total-win-value">0.00</div>
-                    <div style="color: #9ea0a5; font-size: 10px;">TOTAL WIN UGX</div>
+                <div id="tabPrev" class="tab-inactive" onclick="switchTab('prev')" style="flex: 1; background: transparent; border-radius: 18px; padding: 6px 0; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+                    <span style="font-weight: 400; font-size: 12px; color: #9ea0a5;">Previous</span>
+                </div>
+                <div id="tabTop" class="tab-inactive" onclick="switchTab('top')" style="flex: 1; background: transparent; border-radius: 18px; padding: 6px 0; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+                    <span style="font-weight: 400; font-size: 12px; color: #9ea0a5;">Top</span>
                 </div>
             </div>
         </div>
-    
-<!-- SEPARATOR + PROGRESS -->
-<div style="margin: 8px 16px 16px 16px;">
-    <div style="background: #1c1d22; height: 2px; width: 100%; position: relative;">
-        <div id="roundProgress" style="background: #28a71d; width: 0%; height: 2px;"></div>
-    </div>
-</div>
-
-<!-- STAKER SCOREBOARD -->
-<div id="activityContainer" style="margin: 0 16px;"></div>
-
-<!-- FOOTER -->
-<div style="margin: 24px 16px 20px 16px; display: flex; justify-content: space-between;">
-    <div style="display: flex; align-items: center; gap: 6px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2L3 7L4 15L12 22L20 15L21 7L12 2Z" stroke="#9ea0a5" stroke-width="1.5" />
-            <path d="M9 12L11 14L15 9" stroke="#2de313" stroke-width="2" />
-        </svg>
-        <span style="color: #9ea0a5; font-size: 11px;">Provably Fair Game</span>
-    </div>
-    <div>
-        <span style="color: #9ea0a5; font-size: 11px;">Powered by </span>
-        <span style="color: white; font-weight: 700; font-size: 11px;">SPRIBE</span>
-    </div>
-</div>
-<!-- DASHBOARD MODAL -->
-        <div id="dashboardModal" style="display: none;" class="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>⚙️ Control Dashboard</h3>
-                    <button class="close-modal" onclick="closeDashboard()">✕</button>
-                </div>
-                <div class="setting-row">
-                    <label class="setting-label">💰 Account Balance (UGX)</label>
-                    <input type="number" id="balanceInput" class="setting-input" value="5000" step="1000">
-                    <div class="preset-buttons" style="margin-top: 8px;">
-                        <button class="preset-btn" onclick="setBalance(1000)">+1,000</button>
-                        <button class="preset-btn" onclick="setBalance(5000)">+5,000</button>
-                        <button class="preset-btn" onclick="setBalance(10000)">+10,000</button>
-                        <button class="preset-btn" onclick="setBalance(50000)">+50,000</button>
-                    </div>
-                </div>
-                <div class="setting-row">
-                    <label class="setting-label">🎲 Crash Mode</label>
-                    <select id="crashMode" class="setting-input" onchange="toggleCustomPresets()">
-                        <option value="random">Random (Mostly Low Multipliers)</option>
-                        <option value="custom">Custom Crash Points</option>
-                    </select>
-                </div>
-                <div id="customPresets" style="display: none;">
-                    <div class="setting-row">
-                        <label class="setting-label">📊 Custom Crash Points (Round Multipliers)</label>
-                        <input type="text" id="customCrashPoints" class="setting-input" placeholder="1.20x, 1.50x, 2.00x, 3.50x, 1.10x">
-                        <div class="preset-buttons">
-                            <button class="preset-btn" onclick="setCrashPreset('conservative')">📉 Conservative</button>
-                            <button class="preset-btn" onclick="setCrashPreset('medium')">📊 Medium</button>
-                            <button class="preset-btn" onclick="setCrashPreset('aggressive')">📈 Aggressive</button>
+               <!-- SUMMARY PANEL -->
+               <div style="margin: 0 0 12px 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #141516; border-radius: 16px; padding: 20px 16px;">
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <div style="display: flex;">
+                            <div style="width: 28px; height: 28px; background: #3a6ea5; border-radius: 50%; border: 2px solid #141516; margin-right: -6px;"></div>
+                            <div style="width: 28px; height: 28px; background: #5a67d8; border-radius: 50%; border: 2px solid #141516; margin-right: -6px;"></div>
+                            <div style="width: 28px; height: 28px; background: #48bb78; border-radius: 50%; border: 2px solid #141516;"></div>
                         </div>
+                        <span style="color: #9ea0a5; font-size: 12px; font-weight: 400;" id="betCounter">0/0 Bets</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="color: white; font-weight: 700; font-size: 16px;" id="totalPayout" class="total-win-value">0.00</div>
+                        <div style="color: #9ea0a5; font-size: 9px; font-weight: 400;">TOTAL WIN UGX</div>
                     </div>
                 </div>
-                <div class="setting-row">
-                    <label class="setting-label">💰 Staker Amount Range</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="number" id="minStake" class="setting-input" placeholder="Min (UGX)" value="40000">
-                        <input type="number" id="maxStake" class="setting-input" placeholder="Max (UGX)" value="300000">
-                    </div>
-                    <div class="preset-buttons">
-                        <button class="preset-btn" onclick="setStakeRange(40000, 300000)">Default</button>
-                        <button class="preset-btn" onclick="setStakeRange(50000, 500000)">High Roller</button>
-                        <button class="preset-btn" onclick="setStakeRange(20000, 150000)">Conservative</button>
-                    </div>
-                </div>
-                <button class="save-btn" onclick="saveDashboardSettings()">💾 Save Settings</button>
+            </div>
+
+        <!-- SEPARATOR + PROGRESS -->
+        <div style="margin: 0 0 12px 0;">
+            <div style="background: #1c1d22; height: 2px; width: 100%; position: relative;">
+                <div id="roundProgress" style="background: #28a71d; width: 0%; height: 2px;"></div>
             </div>
         </div>
+
+            <!-- STAKER SCOREBOARD -->
+    <div id="activityContainer" style="margin: 0; background: #1b1c1d; border-radius: 8px; padding: 4px;"></div>
+
+    <!-- FOOTER -->
+    <div style="margin: 24px 16px 20px 16px; display: flex; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L3 7L4 15L12 22L20 15L21 7L12 2Z" stroke="#9ea0a5" stroke-width="1.5" />
+                <path d="M9 12L11 14L15 9" stroke="#2de313" stroke-width="2" />
+            </svg>
+            <span style="color: #9ea0a5; font-size: 11px;">Provably Fair Game</span>
+        </div>
+        <div>
+            <span style="color: #9ea0a5; font-size: 11px;">Powered by </span>
+            <span style="color: white; font-weight: 700; font-size: 11px;">SPRIBE</span>
+        </div>
+    </div>
+    <!-- TEMPORARY DEBUG BUTTON -->
     
+    <!-- DASHBOARD MODAL -->
+    <div id="dashboardModal" style="display: none;" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ Control Dashboard</h3>
+                <button class="close-modal" onclick="closeDashboard()">✕</button>
+            </div>
+            <div class="setting-row">
+                <label class="setting-label">💰 Account Balance (UGX)</label>
+                <input type="number" id="balanceInput" class="setting-input" value="5000" step="1000">
+                <div class="preset-buttons" style="margin-top: 8px;">
+                    <button class="preset-btn" onclick="setBalance(1000)">+1,000</button>
+                    <button class="preset-btn" onclick="setBalance(5000)">+5,000</button>
+                    <button class="preset-btn" onclick="setBalance(10000)">+10,000</button>
+                    <button class="preset-btn" onclick="setBalance(50000)">+50,000</button>
+                </div>
+            </div>
+            <div class="setting-row">
+                <label class="setting-label">🎲 Crash Mode</label>
+                <select id="crashMode" class="setting-input" onchange="toggleCustomPresets()">
+                    <option value="random">Random (Mostly Low Multipliers)</option>
+                    <option value="custom">Custom Crash Points</option>
+                </select>
+            </div>
+            <div id="customPresets" style="display: none;">
+                <div class="setting-row">
+                    <label class="setting-label">📊 Custom Crash Points (Round Multipliers)</label>
+                    <input type="text" id="customCrashPoints" class="setting-input" placeholder="1.20x, 1.50x, 2.00x, 3.50x, 1.10x">
+                    <div class="preset-buttons">
+                        <button class="preset-btn" onclick="setCrashPreset('conservative')">📉 Conservative</button>
+                        <button class="preset-btn" onclick="setCrashPreset('medium')">📊 Medium</button>
+                        <button class="preset-btn" onclick="setCrashPreset('aggressive')">📈 Aggressive</button>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-row">
+                <label class="setting-label">💰 Staker Amount Range</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" id="minStake" class="setting-input" placeholder="Min (UGX)" value="40000">
+                    <input type="number" id="maxStake" class="setting-input" placeholder="Max (UGX)" value="300000">
+                </div>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setStakeRange(40000, 300000)">Default</button>
+                    <button class="preset-btn" onclick="setStakeRange(50000, 500000)">High Roller</button>
+                    <button class="preset-btn" onclick="setStakeRange(20000, 150000)">Conservative</button>
+                </div>
+            </div>
+            <button class="save-btn" onclick="saveDashboardSettings()">💾 Save Settings</button>
+        </div>
+    </div>
+
     <script>
     // ============ FAST EXPONENTIAL GROWTH MULTIPLIER ============
     const GROWTH_CONSTANT = 0.08406;
@@ -922,6 +976,7 @@
     let bettingAllowed = false;
     let timeoutWindowActive = false;
     let cashoutTriggered = false;
+    let isRoundStarting = false;
 
     // ============ CRASH MODE VARIABLES ============
     let gameCrashMode = 'random';
@@ -1008,6 +1063,187 @@
     const roundProgressBar = document.getElementById('roundProgress');
     const activityContainer = document.getElementById('activityContainer');
     const multiplierRibbon = document.getElementById('multiplierRibbon');
+    // =====================
+    // FLIGHT CONFIGURATION
+    // =====================
+      // =====================
+    // FLIGHT CONFIG — AB + BC + Loop
+    // =====================
+    
+    // A→B (fixed)
+    const abPath = {
+        startX: 0.100,
+        startY: 0.800,
+        controlX: 0.650,
+        controlY: 0.680,
+        endX: 0.720,
+        endY: 0.180
+    };
+
+    // B point (end of A→B)
+    const B_POINT = { x: 0.720, y: 0.180 };
+
+    // C point
+    const C_POINT = { x: 0.846, y: 0.323 };
+
+    // B→C control point
+    const bcControl = { x: 0.670, y: 0.351 };
+
+    // Timing
+           // Timing
+    const hoverTime = 1000;   // ms hold at B (now handled in path)
+    const loopSpeed = 3000;   // ms per full loop cycle
+    const totalDuration = 20000; // ms total (longer for holds)
+    // Get position on B→C
+    function getPositionOnBC(t) {
+        const u = 1 - t;
+        return {
+            x: u * u * B_POINT.x + 2 * u * t * bcControl.x + t * t * C_POINT.x,
+            y: u * u * B_POINT.y + 2 * u * t * bcControl.y + t * t * C_POINT.y
+        };
+    }
+    function getFlyAwayPosition(progress) {
+        // Start from current plane position, fly to top-right (x: 1.0, y: 0.0)
+        const startX = aircraftX;
+        const startY = aircraftY;
+        const endX = 2.0;
+        const endY = 0.2;
+        
+        
+        
+        // Smooth ease-out curve
+        const eased = 1 - Math.pow(1 - progress, 2);
+        
+        return {
+            x: startX + (endX - startX) * eased,
+            y: startY + (endY - startY) * eased
+        };
+    }
+    // Get position on AB
+    function getPositionOnAB(t) {
+        const u = 1 - t;
+        return {
+            x: u * u * abPath.startX + 2 * u * t * abPath.controlX + t * t * abPath.endX,
+            y: u * u * abPath.startY + 2 * u * t * abPath.controlY + t * t * abPath.endY
+        };
+    }
+
+    // Get position on full path
+    function getPositionOnFullPath(progress) {
+        // Define phase durations (all fractions of total progress)
+        const holdDuration = 0.06; // ~6% of total time per hold (~720ms if total=12000ms)
+        
+        // A→B travel
+        const abTravel = 0.20;
+        // Hold at B (first)
+        const holdB1 = holdDuration;
+        // B→C travel
+        const bcTravel = 0.15;
+        // Hold at C
+        const holdC = holdDuration;
+        // C→B travel (return)
+        const cbTravel = 0.15;
+        // Hold at B (return)
+        const holdB2 = holdDuration;
+        
+        // First cycle total
+        const firstCycle = abTravel + holdB1 + bcTravel + holdC + cbTravel + holdB2;
+        
+        // Remaining time for loop = everything after first cycle
+        const loopTime = 1 - firstCycle;
+        
+        let remaining = progress;
+        
+        // ===== PHASE 1: A→B =====
+        if (remaining < abTravel) {
+            const t = remaining / abTravel;
+            const pos = getPositionOnAB(t);
+            return { x: pos.x, y: pos.y, phase: 'ab_travel' };
+        }
+        remaining -= abTravel;
+        
+        // ===== PHASE 2: HOLD AT B =====
+        if (remaining < holdB1) {
+            return { x: B_POINT.x, y: B_POINT.y, phase: 'hold_b1' };
+        }
+        remaining -= holdB1;
+        
+        // ===== PHASE 3: B→C =====
+        if (remaining < bcTravel) {
+            const t = remaining / bcTravel;
+            const pos = getPositionOnBC(t);
+            return { x: pos.x, y: pos.y, phase: 'bc_travel' };
+        }
+        remaining -= bcTravel;
+        
+        // ===== PHASE 4: HOLD AT C =====
+        if (remaining < holdC) {
+            return { x: C_POINT.x, y: C_POINT.y, phase: 'hold_c' };
+        }
+        remaining -= holdC;
+        
+        // ===== PHASE 5: C→B =====
+        if (remaining < cbTravel) {
+            const t = remaining / cbTravel;
+            const pos = getPositionOnBC(1 - t);
+            return { x: pos.x, y: pos.y, phase: 'cb_travel' };
+        }
+        remaining -= cbTravel;
+        
+        // ===== PHASE 6: HOLD AT B =====
+        if (remaining < holdB2) {
+            return { x: B_POINT.x, y: B_POINT.y, phase: 'hold_b2' };
+        }
+        remaining -= holdB2;
+        
+              // ===== PHASE 7: LOOP (runs for the rest of the round) =====
+        // Map remaining (0 to loopTime) to loopProgress (0 to 1)
+        // Safety check: if loopTime is 0 or less, stay at B
+        if (loopTime <= 0) {
+            return { x: B_POINT.x, y: B_POINT.y, phase: 'loop_hold_b' };
+        }
+        
+        const loopProgress = remaining / loopTime;
+        
+        // Each loop cycle: B→C (travel) + hold C + C→B (travel) + hold B
+        const totalSteps = 4;
+        const stepSize = 1 / totalSteps;
+        
+        const cyclePosition = loopProgress % 1;
+        const stepIndex = Math.floor(cyclePosition / stepSize);
+        const stepT = (cyclePosition % stepSize) / stepSize;
+        const clampedT = Math.max(0, Math.min(1, stepT));
+        
+        switch(stepIndex % totalSteps) {
+            case 0:
+                const pos1 = getPositionOnBC(clampedT);
+                return { x: pos1.x, y: pos1.y, phase: 'loop_bc' };
+            case 1:
+                return { x: C_POINT.x, y: C_POINT.y, phase: 'loop_hold_c' };
+            case 2:
+                const pos2 = getPositionOnBC(1 - clampedT);
+                return { x: pos2.x, y: pos2.y, phase: 'loop_cb' };
+            case 3:
+                return { x: B_POINT.x, y: B_POINT.y, phase: 'loop_hold_b' };
+            default:
+                return { x: B_POINT.x, y: B_POINT.y, phase: 'loop_hold_b' };
+        }
+    }  // <-- Make sure this closing brace matches the function opening
+    // Flight state
+        // Flight state
+        let isFlying = false;
+    let flightStartTime = 0;
+    let flightProgress = 0;
+    let aircraftX = 0.1;  // Current X position of aircraft
+    let aircraftY = 0.8;  // Current Y position of aircraft
+    
+    // Fly-away state (on crash)
+    let isFlyingAway = false;
+    let flyAwayStartTime = 0;
+    let flyAwayProgress = 0;
+    const FLY_AWAY_DURATION = 500; // ms
+
+
 
     const betAmountInput = document.getElementById('betAmountInput');
     const betAmountDisplay = document.getElementById('betAmountDisplay');
@@ -1046,15 +1282,42 @@
     }
 
     function updateMultiplierRibbon() {
-        multiplierRibbon.innerHTML = recentCrashHistory.slice(-8).reverse().map(val =>{
+        // Ensure we have enough items to fill the ribbon
+        while (recentCrashHistory.length < 10) {
+            recentCrashHistory.push(parseFloat((1 + Math.random() * 3).toFixed(2)));
+        }
+        
+        const items = recentCrashHistory.slice(-10).reverse().map(val => {
             let color;
-            if (val <2) color =  '#5bc0ff';
-            else if (val <10) color =  '#5a0b5e';
-            else color = '#ff1493';
-             return `<span style="font-weight: 700; color: ${color};font-size: 13px; white-space: nowrap;">${val.toFixed(2)}x</span>`;
+            let glowColor;
+            if (val < 2) {
+                color = '#5bc0ff';
+                glowColor = 'rgba(91, 192, 255, 0.6)';
+            } else if (val < 10) {
+                color = '#a855f7';
+                glowColor = 'rgba(168, 85, 247, 0.6)';
+            } else {
+                color = '#ff1493';
+                glowColor = 'rgba(255, 20, 147, 0.6)';
+            }
+            return `<span style="font-weight: 400; color: ${color}; font-size: 13px; white-space: nowrap; flex: 1; text-align: center; text-shadow: 0 0 10px ${glowColor}, 0 0 20px ${glowColor}; letter-spacing: 0.5px;">${val.toFixed(2)}x</span>`;
         }).join('');
+        
+        multiplierRibbon.innerHTML = items;
+        multiplierRibbon.style.display = 'flex';
+        multiplierRibbon.style.justifyContent = 'space-evenly';
+        multiplierRibbon.style.alignItems = 'center';
+        multiplierRibbon.style.gap = '8px';
+        multiplierRibbon.style.padding = '0 8px';
+        multiplierRibbon.style.background = 'transparent';
+        multiplierRibbon.style.height = '24px';
+        multiplierRibbon.style.marginTop = '0px';
+        multiplierRibbon.style.marginBottom = '8px';
+        multiplierRibbon.style.width = 'calc(100% - 16px)';
+        multiplierRibbon.style.overflowX = 'visible';
+        multiplierRibbon.style.flexWrap = 'nowrap';
     }
-
+    // ============ GENERATE CRASH POINT ============
     function generateCrashPoint() {
         if (gameCrashMode === 'custom') {
             if (customCrashPoints.length === 0) {
@@ -1071,6 +1334,325 @@
             if (rand < 0.98) return parseFloat((10.00 + Math.random() * 20.00).toFixed(2));
             return parseFloat((30.00 + Math.random() * 70.00).toFixed(2));
         }
+    }
+
+    // ============ FLIGHT ANIMATION ============
+
+    function getFlightPosition(progress) {
+        const pos = getPositionOnFullPath(progress);
+        return { x: pos.x, y: pos.y };
+    }
+    function updateAircraftPosition(x, y) {
+        const aircraft = document.getElementById('countdownAircraft');
+        if (!aircraft) return;
+        
+        const container = document.getElementById('gameCanvasContainer');
+        if (!container) return;
+        
+        const rect = container.getBoundingClientRect();
+        const canvasWidth = rect.width;
+        const canvasHeight = rect.height;
+        
+        // Calculate pixel position
+        const pixelX = x * canvasWidth;
+        const pixelY = y * canvasHeight;
+        
+        // Offset to center the plane on the path point (adjust these values if needed)
+        const offsetX = -55;  // Half of plane width (110px / 2)
+        const offsetY = -20;  // Half of plane height (adjust based on your image)
+        
+        aircraft.style.position = 'absolute';
+        aircraft.style.left = (pixelX + offsetX) + 'px';
+        aircraft.style.top = (pixelY + offsetY) + 'px';
+        aircraft.style.bottom = 'auto';
+        aircraft.style.right = 'auto';
+        aircraft.style.transform = 'none';
+        aircraft.style.transformOrigin = 'center center';
+        aircraft.style.animation = 'none';
+        aircraft.style.width = '110px';
+        aircraft.style.height = 'auto';
+        aircraft.style.display = 'block';
+        aircraft.style.opacity = '1';
+        aircraft.style.visibility = 'visible';
+    }
+    // ============ J‑CURVE TRAIL ============
+    
+    // Fixed start point (A) — bottom‑left of the game canvas
+    function getPointA() {
+        const container = document.getElementById('gameCanvasContainer');
+        if (!container) return { x: 0.00, y: 1.00 };
+        const rect = container.getBoundingClientRect();
+        const w = rect.width;
+        const h = rect.height;
+        // A is at 5% from left, 92% from top (bottom-left)
+        return { x: 0.00, y: 1.00 };
+    }
+
+    function drawJCurve(endX, endY) {
+        const canvas = document.getElementById('gameCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        
+        const container = document.getElementById('gameCanvasContainer');
+        if (!container) return;
+        const rect = container.getBoundingClientRect();
+        const w = canvas.width;
+        const h = canvas.height;
+        
+        // Clear canvas before drawing
+        ctx.clearRect(0, 0, w, h);
+        
+        // Point A (fixed)
+        const A = getPointA();
+        const Ax = A.x * w;
+        const Ay = A.y * h;
+        
+               // Point B (aircraft position with offset)
+               const offsetX = 0;  // pixels to shift right (positive) or left (negative)
+        const offsetY = 20;  // pixels to shift down (positive) or up (negative)
+        const Bx = (endX * w) + offsetX;
+        const By = (endY * h) + offsetY;
+        
+        // Calculate distance for scaling
+        const dx = Bx - Ax;
+        const dy = By - Ay;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 10) return;
+        
+                // DEBUG: Log position
+                console.log('drawJCurve called, endX:', endX, 'endY:', endY, 'Bx:', Bx, 'By:', By);
+        
+   
+
+
+               // J‑curve control points (reduced intensity by 80%)
+               const flex = 0.04 + 0.08 * (1 - endY);  // Was 0.2 + 0.4 * (1 - endY)
+        
+        // Control point 1: very gentle dip near A
+        const cp1x = Ax + dx * 0.12;  // Was 0.15
+        const cp1y = Ay + dy * 0.01 + 3;  // Was 0.05 + 15
+        
+        // Control point 2: much gentler pull near B
+        const cp2x = Ax + dx * 0.45;  // Was 0.55
+        const cp2y = Ay - dy * (0.10 + flex * 0.10);  // Was 0.5 + flex * 0.5
+        
+
+        // === DRAW RED FILL (vertical 90° down) ===
+        ctx.beginPath();
+        ctx.moveTo(Ax, Ay);
+        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, Bx, By);
+        ctx.lineTo(Bx, h);
+        ctx.lineTo(Ax, h);
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(255, 30, 30, 0.25)';
+        ctx.fill();
+        
+        // === DRAW GLOWING RED LINE ===
+        ctx.beginPath();
+        ctx.moveTo(Ax, Ay);
+        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, Bx, By);
+        ctx.strokeStyle = 'rgba(255, 20, 20, 1)';
+        ctx.lineWidth = 4.5;
+        ctx.shadowColor = 'rgba(255, 0, 0, 0.8)';
+        ctx.shadowBlur = 35;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        
+        // === DRAW BRIGHTER CORE ===
+        ctx.beginPath();
+        ctx.moveTo(Ax, Ay);
+        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, Bx, By);
+        ctx.strokeStyle = 'rgba(255, 80, 80, 0.8)';
+        ctx.lineWidth = 3.5;
+        ctx.shadowColor = 'rgba(255, 0, 0, 0.9)';
+        ctx.shadowBlur = 40;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+    }
+
+    function clearJCurve() {
+        const canvas = document.getElementById('gameCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // ============ TEST FUNCTION ============
+    function testFlight() {
+        console.log('=== MANUAL TEST FLIGHT ===');
+        console.log('isFlying:', isFlying);
+        console.log('Flight Path ready');
+        
+        const aircraft = document.getElementById('countdownAircraft');
+        console.log('Aircraft element found:', aircraft);
+        
+        if (aircraft) {
+            console.log('Aircraft found, forcing flight');
+            aircraft.style.display = 'block';
+            aircraft.style.opacity = '1';
+            aircraft.style.visibility = 'visible';
+            aircraft.style.animation = 'none';
+            aircraft.style.position = 'absolute';
+            
+            // Force start
+            isFlying = false;
+            startFlight();
+        } else {
+            console.error('Aircraft not found!');
+        }
+    }
+    function startFlight() {
+        console.log('=== startFlight CALLED ===');
+        console.log('isFlying before:', isFlying);
+        
+        if (isFlying) {
+            console.log('Already flying, skipping');
+            return;
+        }
+        
+        const aircraft = document.getElementById('countdownAircraft');
+        console.log('Aircraft in startFlight:', aircraft);
+        
+        if (!aircraft) {
+            console.error('ERROR: Aircraft not found in startFlight!');
+            return;
+        }
+        
+        console.log('Aircraft found, starting flight');
+        
+        // Force visible
+        aircraft.style.display = 'block';
+        aircraft.style.opacity = '1';
+        aircraft.style.visibility = 'visible';
+        aircraft.style.animation = 'none';
+        
+        // Set starting position
+        const startPos = getFlightPosition(0);
+        console.log('Start position:', startPos);
+        updateAircraftPosition(startPos.x, startPos.y);
+        
+        // Start flight - using global totalDuration
+        isFlying = true;
+        flightStartTime = performance.now();
+        flightProgress = 0;
+        console.log('Flight started at:', flightStartTime);
+        console.log('Total duration:', totalDuration);
+        
+        // Flight will be updated by updateMultiplier loop
+    }
+
+    function resetAircraft() {
+        const aircraft = document.getElementById('countdownAircraft');
+        if (!aircraft) return;
+        
+        isFlying = false;
+        isFlyingAway = false;
+        flightProgress = 0;
+        flyAwayProgress = 0;
+        
+        // Clear the J‑curve
+        clearJCurve();
+        
+        // Reset to original position
+        aircraft.style.position = 'absolute';
+        aircraft.style.bottom = '10px';
+        aircraft.style.left = '7px';
+        aircraft.style.top = 'auto';
+        aircraft.style.right = 'auto';
+        aircraft.style.transform = 'none';
+        aircraft.style.animation = 'countdownFloat 2s ease-in-out infinite';
+        aircraft.style.opacity = '1';
+        aircraft.style.display = 'block';
+    }
+       // ============ ELECTRONIC GLOW SYSTEM ============
+       function updateGlow(multiplier) {
+        const glowLayer = document.getElementById('glowLayer');
+        if (!glowLayer) return;
+
+        // Determine color based on multiplier
+        let color1, color2, textColor;
+        let intensity = Math.min(1, (multiplier - 1) / 15);
+        
+        if (multiplier < 2) {
+            // Blue glow - increased intensity
+            color1 = 'rgba(59, 130, 246, 1)';
+            color2 = 'rgba(37, 99, 235, 0)';
+            textColor = 'rgba(59, 130, 246, 1)';
+        } else if (multiplier < 10) {
+            // Purple glow - increased intensity
+            color1 = 'rgba(168, 85, 247, 1)';
+            color2 = 'rgba(147, 51, 234, 0)';
+            textColor = 'rgba(168, 85, 247, 1)';
+        } else {
+            // Pink/Red glow - minimized size
+            color1 = 'rgba(236, 72, 153, 0.8)';
+            color2 = 'rgba(219, 39, 119, 0)';
+            textColor = 'rgba(236, 72, 153, 0.7)';
+        }
+
+        // Different glow sizes for different colors
+        let glowIntensity, glowSize;
+        
+        if (multiplier < 2) {
+            // Blue - larger
+            glowIntensity = 0.6 + intensity * 0.4;
+            glowSize = 35 + intensity * 40;
+        } else if (multiplier < 10) {
+            // Purple - medium
+            glowIntensity = 0.6 + intensity * 0.4;
+            glowSize = 30 + intensity * 35;
+        } else {
+            // Pink - smaller
+            glowIntensity = 0.5 + intensity * 0.3;
+            glowSize = 20 + intensity * 25;
+        }
+        
+        // CENTERED GLOW - only in the middle, fading outward
+        glowLayer.style.background = `
+            radial-gradient(circle at 50% 50%, ${color1} 0%, ${color2} ${glowSize}%, transparent 100%)
+        `;
+        glowLayer.style.opacity = glowIntensity;
+        glowLayer.style.boxShadow = 'none';
+        glowLayer.style.borderRadius = '50%';
+        glowLayer.style.transform = 'scale(1)';
+        glowLayer.style.filter = 'none';
+        glowLayer.style.mixBlendMode = 'screen';
+        glowLayer.style.width = '100%';
+        glowLayer.style.height = '100%';
+        glowLayer.style.position = 'absolute';
+        glowLayer.style.top = '0';
+        glowLayer.style.left = '0';
+        glowLayer.style.pointerEvents = 'none';
+        
+        // Add text shadow to the multiplier
+        const crashValue = document.getElementById('crashValue');
+        if (crashValue) {
+            crashValue.style.textShadow = `
+                0 0 30px ${textColor},
+                0 0 60px ${textColor},
+                0 0 90px ${color1}
+            `;
+        }
+    }
+
+    function resetGlow() {
+        const glowLayer = document.getElementById('glowLayer');
+        if (!glowLayer) return;
+        glowLayer.style.background = 'transparent';
+        glowLayer.style.opacity = '0';
+        glowLayer.style.boxShadow = 'none';
+        glowLayer.style.filter = 'none';
+        glowLayer.style.transform = 'scale(1)';
+        glowLayer.style.mixBlendMode = 'normal';
+        
+        // Reset text shadow
+        const crashValue = document.getElementById('crashValue');
+        if (crashValue) {
+            crashValue.style.textShadow = '0 0 30px rgba(255, 255, 255, 0.5)';
+        }
+    
     }
 
     function updateButtonState(cardNumber, betAmountValue) {
@@ -1134,7 +1716,7 @@
             const cashoutMult = staker.cashoutMultiplier;
             const row = document.createElement('div');
             row.className = `activity-row ${isCashedOut ? 'cashed-out' : ''}`;
-            row.style.cssText = 'background: ' + (isCashedOut ? '#3a5e20' : '#1b1c1d') + '; border-radius: 40px; padding: 0 16px; height: 44px; display: flex; align-items: center; margin-bottom: 8px;';
+            row.style.cssText = 'background: ' + (isCashedOut ? '#3a5e20' : '#141516') + '; border-radius: 40px; padding: 0 16px; height: 44px; display: flex; align-items: center; margin-bottom: 8px;';
             row.innerHTML = `
                       <div class="staker-pill-content">
                         <div class="staker-section">
@@ -1180,7 +1762,6 @@
             const text = document.getElementById('countdownText');
             if (text) text.innerHTML = '4.0s';
             
-            // === RANDOM PFP SELECTION ===
             const pfpImages = [
                 'assets/pfp1.png', 'assets/pfp2.png', 'assets/pfp3.png',
                 'assets/pfp4.png', 'assets/pfp5.png', 'assets/pfp6.png',
@@ -1196,11 +1777,9 @@
             if (pfp2) pfp2.src = pfpImages[Math.floor(Math.random() * pfpImages.length)];
             if (pfp3) pfp3.src = pfpImages[Math.floor(Math.random() * pfpImages.length)];
             
-            // === SHOW STATS ===
             const stats = document.getElementById('countdownStats');
             if (stats) stats.style.display = 'flex';
             
-            // === COUNTING ANIMATION ===
             const target = Math.floor(Math.random() * (5973 - 3266 + 1)) + 3266;
             const el = document.getElementById('countdownBetCount');
             if (el) {
@@ -1222,11 +1801,31 @@
         const overlay = document.getElementById('countdownOverlay');
         if (overlay) {
             overlay.style.display = 'none';
-            const stats = document.getElementById('countdownStats');
-            if (stats) stats.style.display = 'none';
+            // DO NOT hide countdownStats here — keep it visible
+        }
+        
+        // FORCE aircraft to stay visible (only if not in fly-away)
+        const aircraft = document.getElementById('countdownAircraft');
+        if (aircraft) {
+            if (!isFlyingAway) {
+                console.log('Hiding countdown, keeping aircraft visible');
+                aircraft.style.display = 'block';
+                aircraft.style.visibility = 'visible';
+                aircraft.style.opacity = '1';
+                aircraft.style.position = 'absolute';
+                aircraft.style.bottom = '10px';
+                aircraft.style.left = '7px';
+                aircraft.style.top = 'auto';
+                aircraft.style.right = 'auto';
+                aircraft.style.transform = 'none';
+                aircraft.style.animation = 'countdownFloat 2s ease-in-out infinite';
+                aircraft.style.pointerEvents = 'none';
+            } else {
+                console.log('Hiding countdown, aircraft in fly-away mode - preserving position');
+                aircraft.style.animation = 'none';
+            }
         }
     }
-
     function updateCountdownOverlay(timeLeft, totalTime) {
         const bar = document.getElementById('countdownBarFill');
         const text = document.getElementById('countdownText');
@@ -1261,72 +1860,86 @@
     }
 
     function startCountdown() {
-        // Hide "FLEW AWAY" message
-        const crashMsg = document.getElementById('crashMessage');
-        if (crashMsg) {
-            crashMsg.style.display = 'none';
-        }
-        if (countdownInterval) clearInterval(countdownInterval);
-        if (animationFrameId) cancelAnimationFrame(animationFrameId);
-        if (totalWinUpdateInterval) clearInterval(totalWinUpdateInterval);
-
-        gamePhase = 'countdown';
-        bettingAllowed = true;
-        timeoutWindowActive = false;
-        cashoutTriggered = false;
-
-        showCountdownOverlay();
-
-        resetTotalWinForNewRound();
-        refreshStakersForNewRound();
-
-        roundStatusEl.innerHTML = '⏱️ Place Bets!';
-        crashValueEl.innerHTML = '1.00x';
-        crashValueEl.style.color = '#28a71d';
-        countdownBar.style.width = '0%';
-        roundProgressBar.style.width = '0%';
-
-        let timeLeft = 4.0;
-        roundTimerEl.innerHTML = `${timeLeft.toFixed(1)} seconds to bet`;
-
-        updateCountdownOverlay(4.0, 4.0);
-
-        enableBetButtons(true);
-
-        countdownInterval = setInterval(() => {
-            if (gamePhase !== 'countdown') return;
-
-            timeLeft -= 0.1;
-            const progress = ((4.0 - timeLeft) / 4.0) * 100;
-            countdownBar.style.width = progress + '%';
-            roundProgressBar.style.width = progress + '%';
-
-            updateCountdownOverlay(timeLeft, 4.0);
-
-            if (timeLeft <= 0) {
-                clearInterval(countdownInterval);
-                bettingAllowed = false;
-                roundTimerEl.innerHTML = 'Bets closed!';
-
-                hideCountdownOverlay();
-
-                enableBetButtons(false);
-
-                timeoutWindowActive = true;
-                setTimeout(() => {
-                    timeoutWindowActive = false;
-                    if (gamePhase === 'countdown') {
-                        startCrashRound();
-                    }
-                }, 1000);
-            } else {
-                roundTimerEl.innerHTML = `${timeLeft.toFixed(1)} seconds to bet`;
+        (function() {
+            // RESET CRASH VALUE IMMEDIATELY
+            crashValueEl.innerHTML = '1.00x';
+            crashValueEl.style.color = '#28a71d';
+            crashValueEl.classList.remove('crashing');
+            
+            const crashMsgEl = document.getElementById('crashMessage');
+            if (crashMsgEl) {
+                crashMsgEl.style.display = 'none';
             }
-        }, 100);
-    }
+            if (countdownInterval) clearInterval(countdownInterval);
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            if (totalWinUpdateInterval) clearInterval(totalWinUpdateInterval);
 
+            gamePhase = 'countdown';
+            bettingAllowed = true;
+            timeoutWindowActive = false;
+            cashoutTriggered = false;
+            resetGlow();
+
+            showCountdownOverlay();
+
+            resetTotalWinForNewRound();
+            refreshStakersForNewRound();
+
+            roundStatusEl.innerHTML = '⏱️ Place Bets!';
+            crashValueEl.innerHTML = '1.00x';
+            crashValueEl.style.color = '#28a71d';
+            countdownBar.style.width = '0%';
+            roundProgressBar.style.width = '0%';
+
+            let timeLeft = 4.0;
+            roundTimerEl.innerHTML = timeLeft.toFixed(1) + ' seconds to bet';
+
+            updateCountdownOverlay(4.0, 4.0);
+
+            enableBetButtons(true);
+
+            countdownInterval = setInterval(() => {
+                if (gamePhase !== 'countdown') return;
+
+                timeLeft -= 0.1;
+                const progress = ((4.0 - timeLeft) / 4.0) * 100;
+                countdownBar.style.width = progress + '%';
+                roundProgressBar.style.width = progress + '%';
+
+                updateCountdownOverlay(timeLeft, 4.0);
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    bettingAllowed = false;
+                    roundTimerEl.innerHTML = 'Bets closed!';
+
+                    hideCountdownOverlay();
+
+                    enableBetButtons(false);
+
+                    timeoutWindowActive = true;
+                    setTimeout(() => {
+                        timeoutWindowActive = false;
+                        if (gamePhase === 'countdown') {
+                            startCrashRound();
+                        }
+                    }, 1000);
+                } else {
+                    roundTimerEl.innerHTML = timeLeft.toFixed(1) + ' seconds to bet';
+                }
+            }, 100);
+        })();
+    }
     function startCrashRound() {
-        // Hide "FLEW AWAY" message
+        // Prevent multiple simultaneous calls
+        if (isRoundStarting) {
+            console.log('Round already starting, skipping');
+            return;
+        }
+        isRoundStarting = true;
+        
+        console.log('=== startCrashRound CALLED ===');
+        
         const crashMsg = document.getElementById('crashMessage');
         if (crashMsg) {
             crashMsg.style.display = 'none';
@@ -1343,13 +1956,12 @@
         bettingAllowed = false;
         timeoutWindowActive = false;
         cashoutTriggered = false;
-
-        if (animationEngine) {
-            animationEngine.isRunning = true;
-            animationEngine.isCrashed = false;
-            animationEngine.reset();
-        }
-
+        resetGlow();
+        updateGlow(1.00);
+        
+        // Start aircraft flight
+        console.log('Calling startFlight from startCrashRound');
+        startFlight();
         roundStatusEl.innerHTML = '✈️ Multiplier Rising';
         crashValueEl.innerHTML = '1.00x';
         crashValueEl.style.color = '#28a71d';
@@ -1364,39 +1976,81 @@
             }
         }, 2000);
 
-        function updateMultiplier(now) {
-            if (gamePhase !== 'running') return;
+        // Start the multiplier update loop
+        animationFrameId = requestAnimationFrame(updateMultiplier);
+        
+        // Reset the flag after a short delay
+        setTimeout(() => {
+            isRoundStarting = false;
+        }, 500);
+    }
 
-            const elapsedSeconds = (now - roundStartTime) / 1000;
-            currentMultiplier = calculateMultiplierAtTime(elapsedSeconds);
 
-            crashValueEl.innerHTML = currentMultiplier.toFixed(2) + 'x';
 
-            if (animationEngine) {
-                animationEngine.update(currentMultiplier, crashPoint, true, false, elapsedSeconds);
+    function updateMultiplier(now) {
+        if (gamePhase !== 'running') return;
+
+        const elapsedSeconds = (now - roundStartTime) / 1000;
+        currentMultiplier = calculateMultiplierAtTime(elapsedSeconds);
+
+        crashValueEl.innerHTML = currentMultiplier.toFixed(2) + 'x';
+        updateGlow(currentMultiplier);
+
+             // Update flight position using the global totalDuration
+             if (isFlying) {
+            const elapsed = now - flightStartTime;
+            flightProgress = Math.min(1, elapsed / totalDuration);
+            const pos = getFlightPosition(flightProgress);
+            aircraftX = pos.x;
+            aircraftY = pos.y;
+            updateAircraftPosition(pos.x, pos.y);
+            
+            // Draw J‑curve trail (Point B follows aircraft)
+            drawJCurve(pos.x, pos.y);
+            
+            if (flightProgress >= 1) {
+                console.log('Flight complete');
+                isFlying = false;
             }
-
-            const currentAmount1 = getBetAmount('card1');
-            const currentAmount2 = getBetAmount('card2');
-            updateButtonState(1, currentAmount1);
-            updateButtonState(2, currentAmount2);
-            updateActiveBetsMultiplier(currentMultiplier);
-
-            const progress = Math.min(100, (elapsedSeconds / 10) * 100);
-            countdownBar.style.width = progress + '%';
-            roundProgressBar.style.width = progress + '%';
-
-            if (currentMultiplier >= crashPoint) {
-                crashGame();
-                return;
+        }
+        
+        // Update fly-away position (on crash)
+        if (isFlyingAway) {
+            console.log( 'Fly-away updating:'  , flyAwayProgress);
+            const elapsed = now - flyAwayStartTime;
+            flyAwayProgress = Math.min(1, elapsed / FLY_AWAY_DURATION);
+            const pos = getFlyAwayPosition(flyAwayProgress);
+            updateAircraftPosition(pos.x, pos.y);
+            
+            if (flyAwayProgress >= 1) {
+                console.log('Fly-away complete');
+                isFlyingAway = false;
+                // Hide aircraft after flying away
+                const aircraft = document.getElementById('countdownAircraft');
+                if (aircraft) {
+                    aircraft.style.opacity = '0';
+                    aircraft.style.display = 'none';
+                }
             }
+        }
 
-            animationFrameId = requestAnimationFrame(updateMultiplier);
+        const currentAmount1 = getBetAmount('card1');
+        const currentAmount2 = getBetAmount('card2');
+        updateButtonState(1, currentAmount1);
+        updateButtonState(2, currentAmount2);
+        updateActiveBetsMultiplier(currentMultiplier);
+
+        const progress = Math.min(100, (elapsedSeconds / 10) * 100);
+        countdownBar.style.width = progress + '%';
+        roundProgressBar.style.width = progress + '%';
+
+        if (currentMultiplier >= crashPoint) {
+            crashGame();
+            return;
         }
 
         animationFrameId = requestAnimationFrame(updateMultiplier);
     }
-
     function updateActiveBetsMultiplier(multiplier) {
         for (const bet of activeBets) {
             if (!bet.hasCashedOut) {
@@ -1425,10 +2079,6 @@
 
         showCashoutNotification(cashoutAmount, cardNumber);
 
-        if (animationEngine) {
-            animationEngine.triggerCashoutFlash();
-        }
-
         const currentAmount = getBetAmount(`card${cardNumber}`);
         updateButtonState(cardNumber, currentAmount);
         return true;
@@ -1452,31 +2102,40 @@
         updateButtonState(1, currentAmount1);
         updateButtonState(2, currentAmount2);
     }
-
     function crashGame() {
         if (gamePhase !== 'running') return;
         if (animationFrameId) cancelAnimationFrame(animationFrameId);
         if (totalWinUpdateInterval) clearInterval(totalWinUpdateInterval);
 
         gamePhase = 'crashed';
+        resetGlow();
 
-        if (animationEngine) {
-            animationEngine.isCrashed = true;
-            animationEngine.triggerCrashFlash();
+        // Stop flight and start fly-away
+        isFlying = false;
+        isFlyingAway = true;
+        flyAwayStartTime = performance.now();
+        flyAwayProgress = 0;
+        
+        // Get current aircraft position before fly-away
+        const aircraft = document.getElementById('countdownAircraft');
+        if (aircraft) {
+            aircraft.style.animation = 'none';
+            aircraft.style.opacity = '1';
+            aircraft.style.display = 'block';
         }
-
+        // Clear the J‑curve when fly-away starts
+        clearJCurve();
         crashValueEl.classList.add('crashing');
         crashValueEl.style.color = '#dc2626';
         crashValueEl.innerHTML = crashPoint.toFixed(2) + 'x ';
         roundStatusEl.innerHTML = ' Crashed!';
         bettingAllowed = false;
 
+        // Show FLEW AWAY message immediately
         const crashMsg = document.getElementById('crashMessage');
         if (crashMsg) {
             crashMsg.style.display = 'block';
         }
-
-        hideCountdownOverlay();
 
         recentCrashHistory.push(parseFloat(crashPoint.toFixed(2)));
         if (recentCrashHistory.length > 12) recentCrashHistory.shift();
@@ -1506,12 +2165,55 @@
         betSubtext1.style.display = 'none';
         betSubtext2.style.display = 'none';
 
-        roundDelayTimeout = setTimeout(() => {
-            processPendingBets();
-            startCountdown();
-        }, 1000);
+        // Start fly-away animation loop (separate from updateMultiplier)
+        function animateFlyAway() {
+            if (!isFlyingAway) {
+                // Fly-away complete, clean up
+                const overlay = document.getElementById('countdownOverlay');
+                if (overlay) {
+                    overlay.style.display = 'none';
+                    
+                
+                }
+                resetAircraft();
+                processPendingBets();
+                startCountdown();
+                return;
+            }
+            
+            const now = performance.now();
+            const elapsed = now - flyAwayStartTime;
+            flyAwayProgress = Math.min(1, elapsed / FLY_AWAY_DURATION);
+            const pos = getFlyAwayPosition(flyAwayProgress);
+            updateAircraftPosition(pos.x, pos.y);
+            
+            if (flyAwayProgress >= 1) {
+                console.log('Fly-away complete');
+                isFlyingAway = false;
+                // Hide aircraft after flying away
+                const aircraft = document.getElementById('countdownAircraft');
+                if (aircraft) {
+                    aircraft.style.opacity = '0';
+                    aircraft.style.display = 'none';
+                }
+                // Continue to clean up
+                const overlay = document.getElementById('countdownOverlay');
+                if (overlay) {
+                    overlay.style.display = 'none';
+                    const stats = document.getElementById('countdownStats');
+                    
+                }
+                resetAircraft();
+                processPendingBets();
+                startCountdown();
+            } else {
+                requestAnimationFrame(animateFlyAway);
+            }
+        }
+        
+        // Start the fly-away animation
+        requestAnimationFrame(animateFlyAway);
     }
-
     function handlePlaceBet(cardNumber) {
         if (timeoutWindowActive) {
             showToast('Session timeout! Please wait for next round', 'error');
@@ -1800,399 +2502,43 @@
         openDashboard();
     });
 
-    // ============ CATMULL-ROM TO BÉZIER CONVERSION ============
-    function catmullRomToBezier(points) {
-        if (points.length < 2) return [];
-        const result = [];
-        const n = points.length;
-        for (let i = 0; i < n - 1; i++) {
-            const p0 = points[Math.max(0, i - 1)];
-            const p1 = points[i];
-            const p2 = points[Math.min(n - 1, i + 1)];
-            const p3 = points[Math.min(n - 1, i + 2)];
-            const cp1x = p1.x + (p2.x - p0.x) / 6;
-            const cp1y = p1.y + (p2.y - p0.y) / 6;
-            const cp2x = p2.x - (p3.x - p1.x) / 6;
-            const cp2y = p2.y - (p3.y - p1.y) / 6;
-            result.push({
-                start: { x: p1.x, y: p1.y },
-                cp1: { x: cp1x, y: cp1y },
-                cp2: { x: cp2x, y: cp2y },
-                end: { x: p2.x, y: p2.y }
-            });
-        }
-        return result;
-    }
-
-    // ============ AVIATOR ANIMATION ENGINE ============
-    class AviatorAnimationEngine {
-        constructor() {
-            this.canvas = document.getElementById('gameCanvas');
-            this.ctx = this.canvas.getContext('2d');
-            this.container = document.getElementById('gameCanvasContainer');
-            this.glowLayer = document.getElementById('glowLayer');
-
-            this.width = 0;
-            this.height = 0;
-            this.dpr = 1;
-
-            this.multiplier = 1.00;
-            this.crashPoint = 1.00;
-            this.isRunning = false;
-            this.isCrashed = false;
-            this.elapsedTime = 0;
-
-            this.aircraftX = 0.06;
-            this.aircraftY = 0.95;
-
-            this.curvePoints = [];
-            this.maxPoints = 300;
-
-            this.currentGlow = 'blue';
-            this.glowIntensity = 0;
-
-            this.aircraftImage = null;
-            this.aircraftLoaded = false;
-
-            this.animationId = null;
-
-            this.resizeHandler = this.resize.bind(this);
-            window.addEventListener('resize', this.resizeHandler);
-
-            this.loadAssets();
-            this.resize();
-            this.drawScene();
-        }
-
-        resize() {
-            const rect = this.container.getBoundingClientRect();
-            this.dpr = window.devicePixelRatio || 1;
-            this.width = rect.width;
-            this.height = rect.height;
-            this.canvas.width = this.width * this.dpr;
-            this.canvas.height = this.height * this.dpr;
-            this.canvas.style.width = this.width + 'px';
-            this.canvas.style.height = this.height + 'px';
-            this.ctx.scale(this.dpr, this.dpr);
-        }
-
-        loadAssets() {
-            this.loadAircraft();
-            this.updateGlowBackground('blue', 0.3);
-        }
-
-        loadAircraft() {
-            const img = new Image();
-            img.onload = () => {
-                this.aircraftImage = img;
-                this.aircraftLoaded = true;
-                this.drawScene();
-            };
-            img.onerror = () => {
-                console.warn('Aircraft image not found, using placeholder');
-                this.aircraftLoaded = false;
-            };
-            img.src = 'assets/aircraft.png';
-        }
-
-        updateGlowBackground(color, intensity) {
-            if (!this.glowLayer) return;
-            this.currentGlow = color;
-            this.glowIntensity = Math.min(1, intensity);
-
-            let imageUrl = '';
-            let opacity = 0.15 + this.glowIntensity * 0.45;
-
-            switch (color) {
-                case 'blue': imageUrl = 'assets/glow-blue.png'; break;
-                case 'purple': imageUrl = 'assets/glow-purple.png'; break;
-                case 'pink': imageUrl = 'assets/glow-pink.png'; break;
-                default: imageUrl = 'assets/glow-blue.png';
-            }
-
-            this.glowLayer.style.backgroundImage = `url(${imageUrl})`;
-            this.glowLayer.style.backgroundSize = 'cover';
-            this.glowLayer.style.backgroundPosition = 'center';
-            this.glowLayer.style.opacity = opacity;
-        }
-
-        drawScene() {
-            const ctx = this.ctx;
-            const w = this.width;
-            const h = this.height;
-
-            ctx.clearRect(0, 0, w, h);
-            this.drawGrid(ctx, w, h);
-            this.drawCurve(ctx, w, h);
-
-            if (this.isRunning && !this.isCrashed) {
-                this.drawTrackingLine(ctx, w, h);
-            }
-
-            this.drawAircraft(ctx, w, h);
-        }
-
-        drawGrid(ctx, w, h) {
-            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i < 5; i++) {
-                const y = (i / 5) * h;
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(w, y);
-                ctx.stroke();
-            }
-            for (let i = 0; i < 8; i++) {
-                const x = (i / 8) * w;
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, h);
-                ctx.stroke();
-            }
-        }
-
-        drawCurve(ctx, w, h) {
-            if (this.curvePoints.length < 2) return;
-
-            // Convert points to screen coordinates
-            const screenPoints = this.curvePoints.map(p => ({
-                x: p.x * w,
-                y: p.y * h
-            }));
-
-            // Convert to smooth Bézier segments using Catmull-Rom
-            const segments = catmullRomToBezier(screenPoints);
-            if (segments.length === 0) return;
-
-            // ---- SMOOTH FILL ----
-            ctx.beginPath();
-            ctx.moveTo(0, h);
-            ctx.lineTo(segments[0].start.x, segments[0].start.y);
-
-            for (let i = 0; i < segments.length; i++) {
-                const seg = segments[i];
-                ctx.bezierCurveTo(
-                    seg.cp1.x, seg.cp1.y,
-                    seg.cp2.x, seg.cp2.y,
-                    seg.end.x, seg.end.y
-                );
-            }
-
-            const lastSeg = segments[segments.length - 1];
-            ctx.lineTo(lastSeg.end.x, h);
-            ctx.closePath();
-            ctx.fillStyle = 'rgba(220, 38, 38, 0.45)';
-            ctx.fill();
-
-            // ---- SMOOTH CURVE LINE ----
-            ctx.beginPath();
-            ctx.moveTo(0, h);
-            ctx.lineTo(segments[0].start.x, segments[0].start.y);
-
-            for (let i = 0; i < segments.length; i++) {
-                const seg = segments[i];
-                ctx.bezierCurveTo(
-                    seg.cp1.x, seg.cp1.y,
-                    seg.cp2.x, seg.cp2.y,
-                    seg.end.x, seg.end.y
-                );
-            }
-
-            ctx.strokeStyle = '#dc2626';
-            ctx.lineWidth = 2.5;
-            ctx.shadowColor = 'rgba(40,167,29,0.3)';
-            ctx.shadowBlur = 10;
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-        }
-
-        drawTrackingLine(ctx, w, h) {
-            const x = this.aircraftX * w;
-            const y = this.aircraftY * h;
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-            ctx.lineTo(x, h);
-            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-            ctx.lineWidth = 1;
-            ctx.setLineDash([5, 5]);
-            ctx.stroke();
-            ctx.setLineDash([]);
-        }
-
-        drawAircraft(ctx, w, h) {
-            const x = this.aircraftX * w;
-            const y = this.aircraftY * h;
-            const size = Math.min(w, h) * 0.36;
-
-            // Default aircraft angle
-            let angle = -0.25;
-
-            // Calculate angle from the last two curve points
-            if (this.curvePoints.length >= 2) {
-                const p1 = this.curvePoints[this.curvePoints.length - 2];
-                const p2 = this.curvePoints[this.curvePoints.length - 1];
-                angle = Math.atan2(
-                    (p2.y - p1.y) * h,
-                    (p2.x - p1.x) * w
-                );
-                // Prevent excessive rotation
-                angle = Math.max(-0.8, Math.min(angle, 0.25));
-            }
-
-            if (this.aircraftLoaded && this.aircraftImage) {
-                ctx.save();
-                ctx.translate(x, y);
-                ctx.rotate(angle);
-                ctx.drawImage(
-                    this.aircraftImage,
-                    -size * 0.5,
-                    -size * 0.5,
-                    size,
-                    size
-                );
-                ctx.restore();
-            } else {
-                this.drawPlaceholderAircraft(ctx, x, y, size);
-            }
-        }
-
-        drawPlaceholderAircraft(ctx, x, y, size) {
-            ctx.save();
-            ctx.translate(x, y);
-            const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 2);
-            grad.addColorStop(0, 'rgba(40,167,29,0.15)');
-            grad.addColorStop(1, 'rgba(40,167,29,0)');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.arc(0, 0, size * 2, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#e8e8e8';
-            ctx.beginPath();
-            ctx.ellipse(0, 0, size * 0.6, size * 0.2, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-
-        update(multiplier, crashPoint, isRunning, isCrashed, elapsedTime) {
-            this.multiplier = multiplier;
-            this.crashPoint = crashPoint;
-            this.isRunning = isRunning;
-            this.isCrashed = isCrashed;
-            this.elapsedTime = elapsedTime;
-
-            let glowColor = 'blue';
-            if (multiplier >= 10) glowColor = 'pink';
-            else if (multiplier >= 2) glowColor = 'purple';
-            const intensity = Math.min(1, (multiplier - 1) / 15);
-            this.updateGlowBackground(glowColor, intensity);
-
-            if (isRunning && !isCrashed) {
-                const maxMultiplier = Math.max(2, crashPoint || 2);
-                const progress = Math.min(1, (multiplier - 1) / (maxMultiplier - 1));
-                const t = progress;
-
-                // Horizontal movement
-                this.aircraftX = 0.05 + t * 0.90;
-
-                // More curved Aviator-style climb
-                this.aircraftY = 0.92 - (0.12 * t) - (0.20 * Math.pow(t, 2)) - (0.42 * Math.pow(t, 3));
-                this.aircraftY = Math.max(0.05, this.aircraftY);
-
-                if (this.curvePoints.length === 0) {
-                    this.curvePoints.push({
-                        x: this.aircraftX,
-                        y: this.aircraftY
-                    });
-                } else {
-                    const last = this.curvePoints[this.curvePoints.length - 1];
-                    const dx = this.aircraftX - last.x;
-                    if (dx > 0.002) {
-                        this.curvePoints.push({
-                            x: this.aircraftX,
-                            y: this.aircraftY
-                        });
-                    }
-                }
-            }
-            this.drawScene();
-        }
-
-        reset() {
-            this.curvePoints = [];
-            this.aircraftX = 0.05;
-            this.aircraftY = 0.95;
-            this.isRunning = false;
-            this.isCrashed = false;
-            this.multiplier = 1.00;
-            this.elapsedTime = 0;
-            this.updateGlowBackground('blue', 0.1);
-            this.drawScene();
-        }
-
-        triggerCashoutFlash() {
-            this.container.classList.remove('cashout-flash');
-            void this.container.offsetWidth;
-            this.container.classList.add('cashout-flash');
-        }
-
-        triggerCrashFlash() {
-            this.container.classList.remove('crash-flash');
-            void this.container.offsetWidth;
-            this.container.classList.add('crash-flash');
-        }
-    }
-
-    // ============ INITIALIZE ANIMATION ENGINE ============
-    let animationEngine = null;
-
-    function initAnimationEngine() {
-        if (document.getElementById('gameCanvas')) {
-            animationEngine = new AviatorAnimationEngine();
-            console.log("✅ Animation Engine initialized!");
-            return animationEngine;
-        }
-        return null;
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initAnimationEngine);
-    } else {
-        initAnimationEngine();
-    }
-
-    // ============ INITIALIZE GAME ============
-    setTimeout(function() {
-        const canvas = document.getElementById('gameCanvas');
-        if (canvas) {
-            canvas.style.height = '260px';
-            canvas.height = 260;
-            canvas.width = 380;
-            console.log('Canvas height forced to 260px');
-        }
-        if (typeof animationEngine !== 'undefined' && animationEngine) {
-            animationEngine.resize();
-            animationEngine.drawScene();
-        } else {
-            console.log('Animation engine not ready, retrying...');
-            setTimeout(function() {
-                if (typeof animationEngine !== 'undefined' && animationEngine) {
-                    animationEngine.resize();
-                    animationEngine.drawScene();
-                }
-            }, 500);
-        }
-    }, 300);
-
-    refreshBetCounterValues();
+      // ============ INITIALIZE GAME ============
+      refreshBetCounterValues();
     stakers = generateStakersForRound();
     updateActivityFeed();
     updateMultiplierRibbon();
 
-    if (animationEngine) {
-        animationEngine.reset();
-    }
-
     startCountdown();
+
+    // Ensure aircraft is in starting position
+    setTimeout(() => {
+        const aircraft = document.getElementById('countdownAircraft');
+        if (aircraft) {
+            aircraft.style.position = 'absolute';
+            aircraft.style.bottom = '10px';
+            aircraft.style.left = '7px';
+            aircraft.style.top = 'auto';
+            aircraft.style.right = 'auto';
+            aircraft.style.transform = 'none';
+            aircraft.style.animation = 'countdownFloat 2s ease-in-out infinite';
+            aircraft.style.display = 'block';
+            aircraft.style.opacity = '1';
+        }
+        
+        // Initialize canvas for J‑curve
+        const canvas = document.getElementById('gameCanvas');
+        if (canvas) {
+            const container = document.getElementById('gameCanvasContainer');
+            if (container) {
+                const rect = container.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+                canvas.style.width = '100%';
+                canvas.style.height = '100%';
+                clearJCurve();
+            }
+        }
+    }, 100);
 
     window.adjustAmount = adjustAmount;
     window.adjustAmount2 = adjustAmount2;
@@ -2210,40 +2556,6 @@
     window.saveDashboardSettings = saveDashboardSettings;
     window.setStakeRange = setStakeRange;
 
-    // ============ FIX CANVAS HEIGHT ============
-    setTimeout(function() {
-        const canvas = document.getElementById('gameCanvas');
-        if (canvas) {
-            canvas.style.height = '260px';
-            canvas.height = 260;
-            canvas.width = 380;
-            console.log('Canvas fixed to 260px');
-        }
-        if (typeof animationEngine !== 'undefined' && animationEngine) {
-            animationEngine.resize();
-            animationEngine.drawScene();
-        }
-    }, 500);
-
-    // Fix canvas height issue
-    (function fixCanvas() {
-        const canvas = document.getElementById('gameCanvas');
-        if (canvas) {
-            canvas.style.height = '260px';
-            canvas.height = 260;
-            canvas.width = 380;
-            console.log('Canvas fixed: height=260px');
-        }
-        if (typeof animationEngine !== 'undefined' && animationEngine) {
-            setTimeout(function() {
-                animationEngine.resize();
-                animationEngine.drawScene();
-                console.log('Animation engine resized');
-            }, 200);
-        }
-    })();
-
-</script>
+    </script>
 </body>
 </html>
-```
