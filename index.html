@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/icon-192x192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>BetKawa — Aviator-Style Crash Game</title>
@@ -155,23 +159,26 @@
     }
 
     .cashout-notification {
-        position: fixed;
-        top: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: #3a5e20;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 40px;
-        font-size: 14px;
-        font-weight: 500;
-        z-index: 1000;
-        animation: slideDownFade 0.3s ease;
-        border: 2px solid white;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        white-space: nowrap;
-    }
-
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    animation: slideDownFade 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px 6px 20px;
+    background: linear-gradient(90deg, #1a1a1a 0%, #1a2a1a 40%, #1f3a1f 70%, #2a4a2a69 100%);
+    border: 2px solid rgba(58, 200, 58, 0.541);
+    border-radius: 60px;
+    box-shadow: 0 0 30px rgba(58, 200, 58, 0.15), 0 4px 20px rgba(0,0,0,0.4);
+    min-width: 360px;
+    max-width: 600px;
+    height: 48px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
     @keyframes slideDownFade {
         from {
             opacity: 0;
@@ -323,7 +330,7 @@
 
     .crash-value.crashing {
         color: #dc2626 !important;
-        text-shadow: 0 0 30px #141516 !important;
+        text-shadow: 0 0 30px #14151600 !important;
         animation: shake 0.2s ease;
     }
 
@@ -424,7 +431,7 @@
         position: absolute;
         bottom: 10px;
         left: 7px;
-        width: 110px;
+        width: 130px;
         height: auto;
         opacity: 1;
         animation: countdownFloat 2s ease-in-out infinite;
@@ -587,7 +594,7 @@
 
     #gameCanvasContainer {
         flex-shrink: 0 !important;
-        height: 260px !important;
+        height: 240px !important;
     }
 
     .multiplier-display {
@@ -624,13 +631,1560 @@
     #roundProgress {
         display: none !important;
     }
+    /* Page 3 - Spinning Loader */
+@keyframes spinLoader {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+/* Page 4 - Breather Loader Dots */
+@keyframes breatheDot {
+  0%, 100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+/* Page 0 - Loader Bar Animation */
+@keyframes loadBar {
+  0% { width: 0%; }
+  50% { width: 100%; }
+  100% { width: 0%; }
+}
 </style>
 </head>
-<body><div class="app">
+<body>
+
+
+
+
+    <!-- ============================================================
+     PAGE 0: betPawa SPLASH SCREEN
+     ============================================================ -->
+<div id="page0" style="
+display: flex;
+flex-direction: column;
+height: 100vh;
+width: 100vw;
+background: #FFFFFF;
+position: fixed;
+top: 0;
+left: 0;
+z-index: 999999;
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+">
+
+<!-- betPawa Logo Text -->
+<div style="
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+">
+  <span style="color: #000000;">bet</span><span style="color: #7ED321;">Pawa</span>
+</div>
+
+<!-- Thin Narrow Loader Bar -->
+<div style="
+  width: 120px;
+  height: 3px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+">
+  <div style="
+    width: 0%;
+    height: 100%;
+    background: #7ED321;
+    border-radius: 3px;
+    animation: loadBar 1.5s ease-in-out infinite;
+  "></div>
+</div>
+</div>
+    
+    
+   <!-- ============================================================
+     PAGE 1: betPawa UI RECREATION
+     ============================================================ -->
+<div id="page1" style="
+display: none;
+flex-direction: column;
+height: 100vh;
+width: 100vw;
+background: #F1F1F1;
+position: fixed;
+top: 0;
+left: 0;
+z-index: 99999;
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+overflow: hidden;
+">
+
+<!-- Status Bar -->
+<div style="
+  background: #2a2a2a;
+  padding: 6px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  font-size: 12px;
+  flex-shrink: 0;
+">
+  <div style="display: flex; align-items: center; gap: 6px;">
+    <span style="font-weight: 600;">10:41</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      <path d="M9 12l2 2 4-4"/>
+    </svg>
+  </div>
+  <div style="display: flex; align-items: center; gap: 6px;">
+    <span style="font-size: 10px;">VoLTE1</span>
+    <svg width="16" height="12" viewBox="0 0 24 18" fill="none" stroke="white" stroke-width="1.5">
+      <rect x="0" y="12" width="4" height="6" rx="1"/>
+      <rect x="6" y="8" width="4" height="10" rx="1"/>
+      <rect x="12" y="4" width="4" height="14" rx="1"/>
+      <rect x="18" y="0" width="4" height="18" rx="1"/>
+    </svg>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.04.04A10 10 0 0 0 12 17.66 10 10 0 0 0 19.36 15l.04-.04z"/>
+    </svg>
+    <span>18%</span>
+    <svg width="20" height="12" viewBox="0 0 24 14" fill="none" stroke="white" stroke-width="1.5">
+      <rect x="0" y="4" width="4" height="10" rx="1"/>
+      <rect x="5" y="2" width="4" height="12" rx="1"/>
+      <rect x="10" y="0" width="4" height="14" rx="1"/>
+      <rect x="15" y="0" width="5" height="14" rx="1" fill="white"/>
+      <rect x="21" y="2" width="3" height="10" rx="1" fill="white" stroke="none"/>
+    </svg>
+  </div>
+</div>
+
+<!-- App Bar -->
+<div style="
+  background: #000000;
+  padding: 10px 16px 8px 16px;
+  flex-shrink: 0;
+">
+  <!-- Row 1 -->
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="font-size: 22px; font-weight: 700;">
+      <span style="color: white;">bet</span><span style="color: #7ED321;">Pawa</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <!-- Search Icon -->
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <!-- Wallet Container -->
+      <div style="
+        border: 1px solid white;
+        border-radius: 20px;
+        padding: 4px 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: #000;
+      ">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        <span style="color: white; font-size: 12px; font-weight: 600;">UGX 4,626,200</span>
+      </div>
+      <!-- Deposit Button -->
+      <div style="
+        background: #7ED321;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        font-weight: 700;
+        cursor: pointer;
+      ">+</div>
+    </div>
+  </div>
+
+  <!-- Row 2: Navigation Tabs (SVG Icons) -->
+  <div style="
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 10px;
+    color: #aaa;
+    font-size: 10px;
+    position: relative;
+  ">
+    <!-- Home -->
+    <div style="text-align: center; color: #7ED321;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2">
+        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+      </svg>
+      <div>Home</div>
+      <div style="width: 20px; height: 2px; background: #7ED321; margin: 2px auto 0;"></div>
+    </div>
+    <!-- Sports -->
+    <div style="text-align: center;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M2 12h20"/>
+        <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+      </svg>
+      <div>SPORTS</div>
+    </div>
+    <!-- Live -->
+    <div style="text-align: center;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2">
+        <path d="M3 12a9 9 0 0118 0"/>
+        <path d="M7 12a5 5 0 0110 0"/>
+        <circle cx="12" cy="12" r="2"/>
+      </svg>
+      <div>LIVE</div>
+    </div>
+    <!-- CASINO - CLICKABLE BUTTON -->
+    <div onclick="goToPage2()" style="
+      text-align: center;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      border: 2px solid #7ED321;
+      background: rgba(126, 211, 33, 0.1);
+    ">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v8M8 12h8"/>
+        <circle cx="12" cy="12" r="2" fill="#7ED321"/>
+      </svg>
+      <div style="color: #7ED321; font-weight: 700;">CASINO</div>
+    </div>
+    <!-- Virtuals -->
+    <div style="text-align: center;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2">
+        <rect x="2" y="3" width="20" height="14" rx="2"/>
+        <line x1="8" y1="21" x2="16" y2="21"/>
+        <line x1="12" y1="17" x2="12" y2="21"/>
+      </svg>
+      <div>VIR</div>
+    </div>
+    <!-- Chevron -->
+    <div style="color: #7ED321; font-size: 16px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content Area (Scrollable) -->
+<div style="
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 12px 80px 12px;
+  background: #F1F1F1;
+">
+  <!-- Card 1: Offer Banner -->
+  <div style="
+    background: #F2FEEB;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    position: relative;
+    border: 1px solid #D9F99D;
+  ">
+    <span style="
+      position: absolute;
+      top: 6px;
+      right: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #333;
+    ">✕</span>
+    <div>
+      <span style="font-weight: 700; color: #1a3a1a;">Now Live!</span>
+      <span style="color: #1a3a1a; font-size: 13px;"> 1250% Win Bonus on Sports + 15% Real Casino Cashback with No Limits.</span>
+      <span style="color: #1a3a1a; font-size: 13px; text-decoration: underline; font-weight: 600;">Read More</span>
+    </div>
+  </div>
+
+  <!-- Card 2: Blue Banner -->
+  <div style="
+    background: #E7F7F8;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    position: relative;
+    border: 1px solid #B0D4D8;
+  ">
+    <span style="
+      position: absolute;
+      top: 6px;
+      right: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #333;
+    ">✕</span>
+    <div style="color: #1a2a3a; font-size: 13px;">
+      Set limits to stay in control with deposit limit.
+      <span style="text-decoration: underline; font-weight: 600;">Learn more</span>
+    </div>
+  </div>
+
+  <!-- Card 3: Main Notification -->
+  <div style="
+    background: white;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  ">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <span style="color: #888; font-size: 12px;">7:00 am, Fri 10/07</span>
+      </div>
+      <span style="color: #888; cursor: pointer;">✕</span>
+    </div>
+    <div style="color: #111; font-size: 14px; line-height: 1.5; margin-bottom: 12px;">
+      Your 15% Casino Cashback has been credited to your betPawa account and is ready to use. No limits, use it now!
+    </div>
+    <div style="
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      font-weight: 700;
+      color: #111;
+      font-size: 14px;
+      cursor: pointer;
+      background: white;
+    ">VIEW CASHBACK</div>
+  </div>
+
+  <!-- Card 4: Expandable List -->
+  <div style="
+    background: #F2FEEB;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    border: 1px solid #D9F99D;
+  ">
+    <div style="
+      background: white;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+    ">
+      <span style="font-weight: 700; color: #111; font-size: 15px;">Africa's Betting Giant</span>
+      <span style="color: #888;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2">
+          <polyline points="18 15 12 9 6 15"/>
+        </svg>
+      </span>
+    </div>
+    <div style="padding: 4px 12px;">
+      <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+        <div style="
+          width: 36px;
+          height: 36px;
+          background: #7ED321;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 700;
+          font-size: 14px;
+        ">%</div>
+        <div style="flex:1;">
+          <div style="font-weight: 700; color: #111; font-size: 14px;">New 1250% Win Bonus</div>
+          <div style="color: #888; font-size: 12px;">Read More</div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+        <div style="
+          width: 36px;
+          height: 36px;
+          background: #7ED321;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 700;
+          font-size: 14px;
+        ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div style="flex:1;">
+          <div style="font-weight: 700; color: #111; font-size: 14px;">15% Casino Cashback</div>
+          <div style="color: #888; font-size: 12px;">Read More</div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0;">
+        <div style="
+          width: 36px;
+          height: 36px;
+          background: #7ED321;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 700;
+          font-size: 14px;
+        ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div style="flex:1;">
+          <div style="font-weight: 700; color: #111; font-size: 14px;">Biggest Aviator Wins</div>
+          <div style="color: #888; font-size: 12px;">Read More</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 5: Scrolling Sub-Categories -->
+  <div style="
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 0 12px 0;
+    flex-wrap: nowrap;
+  ">
+    <div style="
+      background: white;
+      border-radius: 30px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      border: 1px solid #ddd;
+    ">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+        <path d="M3 12a9 9 0 0118 0"/>
+        <path d="M7 12a5 5 0 0110 0"/>
+        <circle cx="12" cy="12" r="2"/>
+      </svg>
+      <span style="font-weight: 600; color: #111; font-size: 13px;">Live</span>
+      <span style="
+        background: #e0e0e0;
+        border-radius: 12px;
+        padding: 0 8px;
+        font-size: 11px;
+        color: #333;
+      ">74</span>
+    </div>
+    <div style="
+      background: white;
+      border-radius: 30px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      border: 1px solid #ddd;
+    ">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+      <span style="font-weight: 600; color: #111; font-size: 13px;">Outrights</span>
+      <span style="
+        background: #e0e0e0;
+        border-radius: 12px;
+        padding: 0 8px;
+        font-size: 11px;
+        color: #333;
+      ">8</span>
+    </div>
+    <div style="
+      background: white;
+      border-radius: 30px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      border: 1px solid #ddd;
+    ">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M2 12h20"/>
+        <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+      </svg>
+      <span style="font-weight: 600; color: #111; font-size: 13px;">FIFA World Cup</span>
+      <span style="
+        background: #e0e0e0;
+        border-radius: 12px;
+        padding: 0 8px;
+        font-size: 11px;
+        color: #333;
+      ">2</span>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Green Banner -->
+<div style="
+  background: #7ED321;
+  padding: 8px 16px;
+  text-align: center;
+  color: #1a3a1a;
+  font-weight: 600;
+  font-size: 13px;
+  flex-shrink: 0;
+">
+  Add legs for up to a 1250% Win Bonus.
+</div>
+
+<!-- Bottom Navigation Bar -->
+<div style="
+  background: #000;
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 0 10px 0;
+  color: #888;
+  font-size: 10px;
+  flex-shrink: 0;
+">
+  <div style="text-align: center;">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+    <div>Menu</div>
+  </div>
+  <div style="text-align: center; color: #7ED321;">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M2 12h20"/>
+      <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+    </svg>
+    <div>Sports</div>
+  </div>
+  <div style="text-align: center;">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2">
+      <rect x="2" y="7" width="20" height="14" rx="2"/>
+      <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
+    </svg>
+    <div>Betslip</div>
+  </div>
+  <div style="text-align: center;">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2">
+      <rect x="2" y="7" width="20" height="14" rx="2"/>
+      <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
+      <line x1="8" y1="2" x2="16" y2="2"/>
+    </svg>
+    <div>My bets</div>
+  </div>
+  <div style="text-align: center; position: relative;">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2">
+      <circle cx="12" cy="8" r="4"/>
+      <path d="M5.3 18.3C6.8 16.5 9.2 15 12 15s5.2 1.5 6.7 3.3"/>
+    </svg>
+    <div>Account</div>
+    <div style="
+      position: absolute;
+      top: -2px;
+      right: -4px;
+      background: #7ED321;
+      color: black;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      font-size: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    ">1</div>
+  </div>
+</div>
+</div>
+    
+
+<!-- ============================================================
+     PAGE 2: betPawa CASINO UI
+     ============================================================ -->
+     <div id="page2" style="
+     display: none;
+     flex-direction: column;
+     height: 100vh;
+     width: 100vw;
+     background: #F1F1F1;
+     position: fixed;
+     top: 0;
+     left: 0;
+     z-index: 99999;
+     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+     overflow: hidden;
+   ">
+     
+     <!-- Status Bar -->
+     <div style="
+       background: #2a2a2a;
+       padding: 6px 16px;
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       color: white;
+       font-size: 12px;
+       flex-shrink: 0;
+     ">
+       <div style="display: flex; align-items: center; gap: 6px;">
+         <span style="font-weight: 600;">10:41</span>
+         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+           <path d="M9 12l2 2 4-4"/>
+         </svg>
+       </div>
+       <div style="display: flex; align-items: center; gap: 6px;">
+         <span style="font-size: 10px;">VoLTE1</span>
+         <svg width="16" height="12" viewBox="0 0 24 18" fill="none" stroke="white" stroke-width="1.5">
+           <rect x="0" y="12" width="4" height="6" rx="1"/>
+           <rect x="6" y="8" width="4" height="10" rx="1"/>
+           <rect x="12" y="4" width="4" height="14" rx="1"/>
+           <rect x="18" y="0" width="4" height="18" rx="1"/>
+         </svg>
+         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+           <circle cx="12" cy="12" r="3"/>
+           <path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H5.78a1.65 1.65 0 0 0-1.51 1 1.65 1.65 0 0 0 .33 1.82l.04.04A10 10 0 0 0 12 17.66 10 10 0 0 0 19.36 15l.04-.04z"/>
+         </svg>
+         <span>18%</span>
+         <svg width="20" height="12" viewBox="0 0 24 14" fill="none" stroke="white" stroke-width="1.5">
+           <rect x="0" y="4" width="4" height="10" rx="1"/>
+           <rect x="5" y="2" width="4" height="12" rx="1"/>
+           <rect x="10" y="0" width="4" height="14" rx="1"/>
+           <rect x="15" y="0" width="5" height="14" rx="1" fill="white"/>
+           <rect x="21" y="2" width="3" height="10" rx="1" fill="white" stroke="none"/>
+         </svg>
+       </div>
+     </div>
+   
+     <!-- App Bar -->
+     <div style="
+       background: #000000;
+       padding: 10px 16px 8px 16px;
+       flex-shrink: 0;
+     ">
+       <!-- Row 1 -->
+       <div style="display: flex; justify-content: space-between; align-items: center;">
+         <div style="font-size: 22px; font-weight: 700;">
+           <span style="color: white;">bet</span><span style="color: #7ED321;">Pawa</span>
+         </div>
+         <div style="display: flex; align-items: center; gap: 10px;">
+           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+             <circle cx="11" cy="11" r="8"/>
+             <path d="M21 21l-4.35-4.35"/>
+           </svg>
+           <div style="
+             border: 1px solid white;
+             border-radius: 20px;
+             padding: 4px 12px;
+             display: flex;
+             align-items: center;
+             gap: 6px;
+             background: #000;
+           ">
+             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+               <circle cx="12" cy="12" r="3"/>
+             </svg>
+             <span style="color: white; font-size: 12px; font-weight: 600;">UGX 4,626,200</span>
+           </div>
+           <div style="
+             background: #7ED321;
+             border-radius: 50%;
+             width: 32px;
+             height: 32px;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             color: white;
+             font-size: 20px;
+             font-weight: 700;
+             cursor: pointer;
+           ">+</div>
+         </div>
+       </div>
+   
+       <!-- Row 2: Navigation Tabs (CASINO Active) -->
+       <div style="
+         display: flex;
+         justify-content: space-around;
+         align-items: center;
+         margin-top: 10px;
+         color: #aaa;
+         font-size: 10px;
+         position: relative;
+       ">
+         <div style="text-align: center;">
+           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2">
+             <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+           </svg>
+           <div>SPORTS</div>
+         </div>
+         <div style="text-align: center;">
+           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2">
+             <path d="M3 12a9 9 0 0118 0"/>
+             <path d="M7 12a5 5 0 0110 0"/>
+             <circle cx="12" cy="12" r="2"/>
+           </svg>
+           <div>LIVE</div>
+         </div>
+         <!-- CASINO Active -->
+         <div style="text-align: center; color: #7ED321;">
+           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2">
+             <circle cx="12" cy="12" r="10"/>
+             <path d="M12 8v8M8 12h8"/>
+             <circle cx="12" cy="12" r="2" fill="#7ED321"/>
+           </svg>
+           <div style="font-weight: 700;">CASINO</div>
+           <div style="width: 20px; height: 2px; background: #7ED321; margin: 2px auto 0;"></div>
+         </div>
+         <div style="text-align: center;">
+           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2">
+             <rect x="2" y="3" width="20" height="14" rx="2"/>
+             <line x1="8" y1="21" x2="16" y2="21"/>
+             <line x1="12" y1="17" x2="12" y2="21"/>
+           </svg>
+           <div>VIR</div>
+         </div>
+         <div style="color: #aaa;">
+           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2">
+             <polyline points="6 9 12 15 18 9"/>
+           </svg>
+         </div>
+       </div>
+     </div>
+   
+     <!-- Main Content Area (Scrollable) -->
+     <div style="
+       flex: 1;
+       overflow-y: auto;
+       padding: 12px 12px 80px 12px;
+       background: #F1F1F1;
+     ">
+       <!-- Banner -->
+       <div style="
+         background: #F2FEEB;
+         border-radius: 10px;
+         padding: 10px 14px;
+         margin-bottom: 12px;
+         position: relative;
+         border: 1px solid #D9F99D;
+       ">
+         <span style="
+           position: absolute;
+           top: 4px;
+           right: 10px;
+           cursor: pointer;
+           font-size: 14px;
+           color: #333;
+         ">✕</span>
+         <div style="font-size: 13px; color: #1a3a1a;">
+           <span style="font-weight: 700;">Now Live!</span> 15% Real Casino Cashback with No Limits.
+           <span style="text-decoration: underline; font-weight: 600;">Read More</span>
+         </div>
+       </div>
+   
+       <!-- Filter Bar (Horizontal Scrollable) -->
+       <div style="
+         display: flex;
+         gap: 8px;
+         overflow-x: auto;
+         padding: 4px 0 12px 0;
+         flex-wrap: nowrap;
+       ">
+         <div style="
+           background: white;
+           border-radius: 30px;
+           padding: 6px 14px;
+           display: flex;
+           align-items: center;
+           gap: 4px;
+           flex-shrink: 0;
+           border: 1px solid #ddd;
+         ">
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+             <circle cx="11" cy="11" r="8"/>
+             <path d="M21 21l-4.35-4.35"/>
+           </svg>
+         </div>
+         <div style="
+           background: white;
+           border-radius: 30px;
+           padding: 6px 14px;
+           display: flex;
+           align-items: center;
+           gap: 4px;
+           flex-shrink: 0;
+           border: 1px solid #ddd;
+         ">
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+           </svg>
+         </div>
+         <div style="
+           background: #7ED321;
+           border-radius: 30px;
+           padding: 6px 14px;
+           display: flex;
+           align-items: center;
+           gap: 4px;
+           flex-shrink: 0;
+           color: white;
+           font-weight: 600;
+           font-size: 12px;
+         ">
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+             <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+           </svg>
+           <span>Home</span>
+         </div>
+         <div style="
+           background: white;
+           border-radius: 30px;
+           padding: 6px 14px;
+           display: flex;
+           align-items: center;
+           gap: 4px;
+           flex-shrink: 0;
+           border: 1px solid #ddd;
+           font-size: 12px;
+           font-weight: 500;
+           color: #333;
+         ">All</div>
+         <div style="
+           background: white;
+           border-radius: 30px;
+           padding: 6px 14px;
+           display: flex;
+           align-items: center;
+           gap: 4px;
+           flex-shrink: 0;
+           border: 1px solid #ddd;
+           font-size: 12px;
+           font-weight: 500;
+           color: #333;
+         ">
+           <span>🎆</span> Popular
+         </div>
+         <div style="
+           background: white;
+           border-radius: 30px;
+           padding: 6px 14px;
+           display: flex;
+           align-items: center;
+           gap: 4px;
+           flex-shrink: 0;
+           border: 1px solid #ddd;
+           font-size: 12px;
+           font-weight: 500;
+           color: #333;
+         ">
+           <span>🔥</span> Hot
+         </div>
+         <div style="
+           background: white;
+           border-radius: 30px;
+           padding: 6px 14px;
+           display: flex;
+           align-items: center;
+           gap: 4px;
+           flex-shrink: 0;
+           border: 1px solid #ddd;
+           font-size: 12px;
+           font-weight: 500;
+           color: #333;
+         ">
+           <span>⚠️</span> New
+         </div>
+       </div>
+   
+          <!-- "Most Popular in Uganda" Section -->
+        <!-- "Most Popular in Uganda" Section -->
+        <div style="margin-bottom: 16px;">
+          <!-- Header -->
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+            <span style="font-size: 18px;">🇺🇬</span>
+            <span style="font-weight: 700; color: #111; font-size: 16px;">Most Popular in Uganda</span>
+          </div>
+    
+          <!-- Grid Row 1 -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px;">
+            <!-- Row 1 - Col 1 -->
+            <div style="
+              aspect-ratio: 1/1;
+              background: #2d1b69;
+              border-radius: 8px;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+            ">
+              <div style="
+                position: absolute;
+                top: 4px;
+                left: 4px;
+                background: #8b5cf6;
+                color: white;
+                font-size: 7px;
+                padding: 1px 6px;
+                border-radius: 3px;
+                font-weight: 700;
+                z-index: 2;
+              ">Exclusive</div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <img src="assets/image4.png" alt="image4" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+            </div>
+            <!-- Row 1 - Col 2 -->
+            <div style="
+              aspect-ratio: 1/1;
+              background: #1a3a5c;
+              border-radius: 8px;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+            ">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <img src="assets/image5.png" alt="image5" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+            </div>
+            <!-- Row 1 - Col 3 -->
+            <div style="
+              aspect-ratio: 1/1;
+              background: #5a3a1a;
+              border-radius: 8px;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+            ">
+              <div style="
+                position: absolute;
+                top: 4px;
+                left: 4px;
+                background: #f59e0b;
+                color: white;
+                font-size: 7px;
+                padding: 1px 6px;
+                border-radius: 3px;
+                font-weight: 700;
+                z-index: 2;
+              ">3x3 Slot</div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <img src="assets/image6.png" alt="image6" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+            </div>
+            <!-- Row 1 - Col 4 (Half-cut) -->
+            <div style="
+              aspect-ratio: 1/1;
+              background: #2a3a3a;
+              border-radius: 8px;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+              margin-right: -20px;
+              clip-path: inset(0 20px 0 0);
+            ">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <img src="assets/image7.png" alt="image7" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+            </div>
+          </div>
+    
+          <!-- Grid Row 2 -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px;">
+            <!-- Row 2 - Col 1 (Red Border) - CLICKABLE -->
+            <div onclick="goToPage3()" style="
+              aspect-ratio: 1/1;
+              background: #4a1a1a;
+              border-radius: 8px;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+              border: 2px solid #dc2626;
+              cursor: pointer;
+            ">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <img src="assets/image8.png" alt="image8" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+            </div>
+            <!-- Row 2 - Col 2 -->
+            <div style="
+              aspect-ratio: 1/1;
+              background: #2a5a2a;
+              border-radius: 8px;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+            ">
+              <div style="
+                position: absolute;
+                top: 4px;
+                left: 4px;
+                background: #fbbf24;
+                color: black;
+                font-size: 7px;
+                padding: 1px 6px;
+                border-radius: 3px;
+                font-weight: 700;
+                z-index: 2;
+              ">NEW</div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <img src="assets/image9.png" alt="image9" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+            </div>
+            <!-- Row 2 - Col 3 -->
+            <div style="
+              aspect-ratio: 1/1;
+              background: #5a3a1a;
+              border-radius: 8px;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+            ">
+              <div style="
+                position: absolute;
+                top: 4px;
+                left: 4px;
+                background: #f59e0b;
+                color: white;
+                font-size: 7px;
+                padding: 1px 6px;
+                border-radius: 3px;
+                font-weight: 700;
+                z-index: 2;
+              ">3x3 Slot</div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <img src="assets/image10.png" alt="image10" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+            </div>
+            <!-- Row 2 - Col 4 (Half-cut) -->
+            <div style="
+              aspect-ratio: 1/1;
+              background: #2a3a3a;
+              border-radius: 8px;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+              margin-right: -20px;
+              clip-path: inset(0 20px 0 0);
+            ">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <img src=" assets/image11.png" alt="image11" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+            </div>
+          </div>
+    
+          <!-- Grid Row 3 -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+            <!-- Row 3 - Col 1 -->
+            <div style="
+              aspect-ratio: 1/1;
+              background: #2d1b69;
+              border-radius: 8px;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+            ">
+              <div style="
+                position: absolute;
+                top: 4px;
+                left: 4px;
+                background: #8b5cf6;
+                color: white;
+                font-size: 7px;
+                padding: 1px 6px;
+                border-radius: 3px;
+                font-weight: 700;
+                z-index: 2;
+              ">Exclusive</div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <img src="assets/image12.png" alt="image12" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+            </div>
+            <!-- Row 3 - Col 2 -->
+            <div style="
+              aspect-ratio: 1/1;
+              background: #5a3a1a;
+              border-radius: 8px;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+            ">
+              <div style="
+                position: absolute;
+                top: 4px;
+                left: 4px;
+                background: #f59e0b;
+                color: white;
+                font-size: 7px;
+                padding: 1px 6px;
+                border-radius: 3px;
+                font-weight: 700;
+                z-index: 2;
+              ">3x3 Slot</div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <img src="assets/image13.png" alt="image13" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+            </div>
+            <!-- Row 3 - Col 3 -->
+            <div style="
+              aspect-ratio: 1/1;
+              background: #1a3a5c;
+              border-radius: 8px;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+            ">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <img src="assets/image14.png" alt="image14" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+            </div>
+            <!-- Row 3 - Col 4 (Half-cut) -->
+            <div style="
+              aspect-ratio: 1/1;
+              background: #2a3a3a;
+              border-radius: 8px;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+              margin-right: -20px;
+              clip-path: inset(0 20px 0 0);
+            ">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <img src="assets/image14.png" alt="image14" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+            </div>
+          </div>
+        </div>
+
+
+            <!-- "Hot Games" Section -->
+    <div>
+      <!-- Header -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 18px;">🔥</span>
+          <span style="font-weight: 700; color: #111; font-size: 16px;">Hot Games</span>
+        </div>
+        <div style="
+          background: #7ED321;
+          border-radius: 30px;
+          padding: 4px 12px;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          color: white;
+          font-weight: 700;
+          font-size: 12px;
+        ">
+          62 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Hot Games Grid -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; overflow: hidden;">
+        <!-- Col 1 -->
+        <div style="
+          aspect-ratio: 1/1;
+          background: #2a2a4a;
+          border-radius: 8px;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          clip-path: inset(0 0 30px 0);
+        ">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          <img src="assets/image4.png" alt="image4" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+        </div>
+        <!-- Col 2 -->
+        <div style="
+          aspect-ratio: 1/1;
+          background: #4a2a2a;
+          border-radius: 8px;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          clip-path: inset(0 0 30px 0);
+        ">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          <img src="assets/image5.png" alt="image5" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+        </div>
+        <!-- Col 3 -->
+        <div style="
+          aspect-ratio: 1/1;
+          background: #2a4a2a;
+          border-radius: 8px;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          clip-path: inset(0 0 30px 0);
+        ">
+          <div style="
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background: rgba(255,215,0,0.9);
+            color: black;
+            font-size: 6px;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-weight: 700;
+            z-index: 2;
+          ">Juicy Cash</div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          <img src="assets/image6.png" alt="image6" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+        </div>
+        <!-- Col 4 -->
+        <div style="
+          aspect-ratio: 1/1;
+          background: #3a2a4a;
+          border-radius: 8px;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          clip-path: inset(0 0 30px 0);
+        ">
+          <div style="
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background: rgba(255,215,0,0.9);
+            color: black;
+            font-size: 6px;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-weight: 700;
+            z-index: 2;
+          ">Hot</div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute; top:6px; right:6px; z-index:2;">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          <img src="assets/image7.png" alt="image7" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;" />
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+
+
+
+
+
+<!-- ============================================================
+     PAGE 3: LOADING PAGE
+     ============================================================ -->
+     <div id="page3" style="
+     display: none;
+     flex-direction: column;
+     height: 100vh;
+     width: 100vw;
+     background: #FFFFFF;
+     position: fixed;
+     top: 0;
+     left: 0;
+     z-index: 99999;
+     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+     align-items: center;
+     justify-content: center;
+     overflow: hidden;
+   ">
+     <!-- Spinning Loader -->
+     <div style="
+       width: 40px;
+       height: 40px;
+       border: 4px solid #e0e0e0;
+       border-top: 4px solid #7ED321;
+       border-radius: 50%;
+       animation: spinLoader 0.8s linear infinite;
+     "></div>
+   </div>
+
+<!-- ============================================================
+     PAGE 4: SPRIBE LOADING SCREEN
+     ============================================================ -->
+     <div id="page4" style="
+     display: none;
+     flex-direction: column;
+     height: 100vh;
+     width: 100vw;
+     background: #000000;
+     position: fixed;
+     top: 0;
+     left: 0;
+     z-index: 99999;
+     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+     align-items: center;
+     justify-content: center;
+     overflow: hidden;
+   ">
+     
+     <!-- Centered Branding Block -->
+     <div style="
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       justify-content: center;
+     ">
+       
+       <!-- Top Subtitle: POWERED BY -->
+       <div style="
+         color: #757575;
+         font-size: 12px;
+         font-weight: 600;
+         letter-spacing: 4px;
+         text-transform: uppercase;
+         margin-bottom: 12px;
+         font-family: 'Inter', sans-serif;
+       ">
+         POWERED BY
+       </div>
+   
+       <!-- Main Branding Identity Row -->
+       <div style="
+         display: flex;
+         align-items: center;
+         gap: 14px;
+         margin-bottom: 4px;
+       ">
+         <!-- Left: Circular "S" Logo (Halftone dots) -->
+         <div style="
+           width: 44px;
+           height: 44px;
+           border-radius: 50%;
+           background: #111;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           position: relative;
+         ">
+           <!-- Halftone dots forming "S" -->
+           <div style="
+             display: grid;
+             grid-template-columns: repeat(5, 1fr);
+             grid-template-rows: repeat(5, 1fr);
+             gap: 2px;
+             width: 32px;
+             height: 32px;
+           ">
+             <div style="background:white; border-radius:50%; width:4px; height:4px; grid-column:2;"></div>
+             <div style="background:white; border-radius:50%; width:6px; height:6px; grid-column:3;"></div>
+             <div style="background:white; border-radius:50%; width:6px; height:6px; grid-column:4;"></div>
+             <div style="background:white; border-radius:50%; width:6px; height:6px; grid-row:2; grid-column:1;"></div>
+             <div style="background:white; border-radius:50%; width:8px; height:8px; grid-row:2; grid-column:2;"></div>
+             <div style="background:white; border-radius:50%; width:4px; height:4px; grid-row:2; grid-column:4;"></div>
+             <div style="background:white; border-radius:50%; width:4px; height:4px; grid-row:2; grid-column:5;"></div>
+             <div style="background:white; border-radius:50%; width:8px; height:8px; grid-row:3; grid-column:2;"></div>
+             <div style="background:white; border-radius:50%; width:8px; height:8px; grid-row:3; grid-column:3;"></div>
+             <div style="background:white; border-radius:50%; width:4px; height:4px; grid-row:3; grid-column:4;"></div>
+             <div style="background:white; border-radius:50%; width:6px; height:6px; grid-row:4; grid-column:1;"></div>
+             <div style="background:white; border-radius:50%; width:6px; height:6px; grid-row:4; grid-column:2;"></div>
+             <div style="background:white; border-radius:50%; width:8px; height:8px; grid-row:4; grid-column:3;"></div>
+             <div style="background:white; border-radius:50%; width:6px; height:6px; grid-row:5; grid-column:2;"></div>
+             <div style="background:white; border-radius:50%; width:6px; height:6px; grid-row:5; grid-column:3;"></div>
+             <div style="background:white; border-radius:50%; width:4px; height:4px; grid-row:5; grid-column:4;"></div>
+           </div>
+         </div>
+   
+         <!-- Right: SPRIBE + Sub-tagline -->
+         <div style="display: flex; flex-direction: column; line-height: 1;">
+           <div style="
+             color: #ffffff;
+             font-size: 36px;
+             font-weight: 700;
+             letter-spacing: 1px;
+             font-family: 'Inter', sans-serif;
+             text-transform: uppercase;
+           ">
+             SPRIBE
+           </div>
+           <div style="
+             color: #ffffff;
+             font-size: 8px;
+             font-weight: 300;
+             letter-spacing: 1.5px;
+             text-transform: uppercase;
+             font-family: 'Inter', sans-serif;
+             margin-top: 2px;
+           ">
+             INSIGHTFUL ENTERTAINMENT
+           </div>
+         </div>
+       </div>
+   
+       <!-- Red Breather Loader (4 dots) -->
+       <div style="
+         display: flex;
+         align-items: center;
+         gap: 10px;
+         margin-top: 28px;
+       ">
+         <div style="
+           width: 14px;
+           height: 14px;
+           background: #FF0000;
+           border-radius: 50%;
+           animation: breatheDot 1.2s ease-in-out infinite;
+           animation-delay: 0s;
+         "></div>
+         <div style="
+           width: 14px;
+           height: 14px;
+           background: #FF0000;
+           border-radius: 50%;
+           animation: breatheDot 1.2s ease-in-out infinite;
+           animation-delay: 0.2s;
+         "></div>
+         <div style="
+           width: 14px;
+           height: 14px;
+           background: #FF0000;
+           border-radius: 50%;
+           animation: breatheDot 1.2s ease-in-out infinite;
+           animation-delay: 0.4s;
+         "></div>
+         <div style="
+           width: 14px;
+           height: 14px;
+           background: #FF0000;
+           border-radius: 50%;
+           animation: breatheDot 1.2s ease-in-out infinite;
+           animation-delay: 0.6s;
+         "></div>
+       </div>
+     </div>
+   </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="app">
        <!-- HEADER -->
        <div class="header-container" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #272727; width: 100%; box-sizing: border-box; height: 30px; border-bottom: 0px solid #121213; margin-top: -22px;">
         <!-- LOGO - LEFT -->
-        <img src="./assets/logo-DdzMSAUV.png" alt="Logo" style="height: 30px; width: auto; display: block; flex-shrink: 0; margin-top: 27px;">
+        <img src="assets/logo.png" alt="Logo" style="height: 30px; width: auto; display: block; flex-shrink: 0; margin-top: 27px;">
         
         <!-- RIGHT: Balance + UGX + Menu + Message -->
         <div style="display: flex; align-items: center; gap: 1px; flex-shrink: 0; margin-top: 27px;">
@@ -665,8 +2219,8 @@
      <!-- GAME CANVAS CONTAINER -->
      <div id="gameCanvasContainer">
         <!-- Spinning Background Layer -->
-        <div id="bgLayer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden;">
-            <div style="width: 430%; height: 340%; background-image: url('./assets/bg-optical-ucyS_AsR.png'); background-size: cover; background-position: center; transform-origin: 50% 50%; position: absolute; bottom: -450px; left: -820px; animation: swirlBackground 15s linear infinite; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden;"></div>
+        <div id="bgLayer" style="position: absolute; top: 0; left: 0; width: 110%; height: 110%; z-index: 0; pointer-events: none; overflow: hidden;">
+            <div style="width: 430%; height: 340%; background-image: url('assets/bg-optical.png'); background-size: cover; background-position: center; transform-origin: 50% 50%; position: absolute; bottom: -460px; left: -820px; animation: swirlBackground 15s linear infinite; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden;"></div>
         </div>
         <!-- Dark Overlay -->
         <div id="darkOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.568); z-index: 1; pointer-events: none;"></div>
@@ -676,8 +2230,8 @@
                 <canvas id="gameCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none;"></canvas>
         <!-- Multiplier Display -->
         <div class="multiplier-display">
-            <div id="crashValue" class="crash-value">1.00x</div>
-            <div id="crashMessage" style="font-size: 17px; font-weight: 700; color: #9b9999; margin-top: -95px; display: none; text-shadow: 0 0 20px rgba(220, 38, 38, 0.5);">FLEW AWAY!</div>
+            <div id="crashValue" class="crash-value"> 1.00; </div>
+            <div id="crashMessage" style="font-size: 25px; font-weight: 700; color: #f7f7f7; margin-top: -125px; display: none; text-shadow: 0 0 20px rgba(220, 38, 38, 0);">FLEW AWAY!</div>
             <div style="font-size: 0px; color: #6b728000; margin-top: 2px;" id="roundTimer">Next round starting...</div>
         </div>
 
@@ -693,7 +2247,7 @@
 
                <!-- Countdown Overlay -->
                <div id="countdownOverlay">
-                <img id="countdownImage" src="./assets/countdown-CgWljvdQ.png" alt="Countdown">
+                <img id="countdownImage" src="assets/countdown.png" alt="Countdown">
                 <div style="width: 30%; height: 6px; background: #1a1a1a; border-radius: 3px; overflow: hidden; position: relative; border: 1px solid #2a2a2a;">
                     <div id="countdownBarFill"></div>
                 </div>
@@ -703,9 +2257,9 @@
             <!-- COUNTDOWN STATS - MOVED OUTSIDE OVERLAY SO IT PERSISTS -->
             <div id="countdownStats" style="position: absolute; bottom: 5px; right: 7px; display: none; z-index: 11;">
                 <div style="display: flex; align-items: center; gap: 2px; background: #2c2d30; border-radius: 16px; padding: 4px 10px;">
-                    <img id="pfp1" src="./assets/pfp1-D9l7zZI0.png" alt="PFP" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid #0bdf15; margin-left: -3px; object-fit: cover;">
-                    <img id="pfp2" src="./assets/pfp2-Dz4hxjT8.png" alt="PFP" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid #0fe708; margin-left: -3px; object-fit: cover;">
-                    <img id="pfp3" src="./assets/pfp3-D9oING0A.png" alt="PFP" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid #6bcf07; margin-left: -3px; object-fit: cover;">
+                    <img id="pfp1" src="assets/pfp1.png" alt="PFP" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid #0bdf15; margin-left: -3px; object-fit: cover;">
+                    <img id="pfp2" src="assets/pfp2.png" alt="PFP" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid #0fe708; margin-left: -3px; object-fit: cover;">
+                    <img id="pfp3" src="assets/pfp3.png" alt="PFP" style="width: 25px; height: 25px; border-radius: 50%; border: 1px solid #6bcf07; margin-left: -3px; object-fit: cover;">
                     <span id="countdownBetCount" style="color: #ffffff; font-size: 11px; font-weight: 400; margin-left: 2px;">0</span>
                 </div>
             </div>
@@ -713,7 +2267,7 @@
             
             
             <!-- AIRCRAFT - MOVED OUTSIDE OVERLAY SO IT PERSISTS -->
-            <img id="countdownAircraft" src="./assets/aircraft-BQ5McGkT.png" alt="Aircraft" style="position: absolute; bottom: 10px; left: 7px; width: 110px; height: auto; opacity: 1; animation: countdownFloat 2s ease-in-out infinite; display: block !important; visibility: visible !important; pointer-events: none; z-index: 4;">
+            <img id="countdownAircraft" src="assets/aircraft.png" alt="Aircraft" style="position: absolute; bottom: 10px; left: 7px; width: 130px; height: auto; opacity: 1; animation: countdownFloat 2s ease-in-out infinite; display: block !important; visibility: visible !important; pointer-events: none; z-index: 4;">
      </div>
 
      <!-- BET CARD 1 -->
@@ -739,9 +2293,9 @@
                 </div>
             </div>
             <div class="bet-button" id="betBtn1" onclick="handlePlaceBet(1)" style="flex: 1.2; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.4); min-height: 60px; border-radius: 6px; padding: 2px 0;">
-                <span style="font-weight: 800; font-size: 18px;" id="betText1">Bet</span>
-                <span style="font-weight: 500; font-size: 10px;" id="betAmountDisplay">1,000 UGX</span>
-                <span style="font-weight: 400; font-size: 8px; display: none;" id="betSubtext1"></span>
+                <span style="font-weight: 500; font-size: 20px;" id="betText1">Bet</span>
+                <span style="font-weight: 500; font-size: 20px;" id="betAmountDisplay">1,000 UGX</span>
+                <span style="font-weight: 400; font-size: 12px; display: none;" id="betSubtext1"></span>
             </div>
         </div>
     </div>
@@ -772,9 +2326,9 @@
                 </div>
             </div>
             <div class="bet-button" id="betBtn2" onclick="handlePlaceBet(2)" style="flex: 1.2; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.4); min-height: 60px; border-radius: 6px; padding: 2px 0;">
-                <span style="font-weight: 800; font-size: 18px;" id="betText2">Bet</span>
-                <span style="font-weight: 500; font-size: 10px;" id="betAmountDisplay2">1,000 UGX</span>
-                <span style="font-weight: 400; font-size: 8px; display: none;" id="betSubtext2"></span>
+                <span style="font-weight: 500; font-size: 20px;" id="betText2">Bet</span>
+                <span style="font-weight: 500; font-size: 20px;" id="betAmountDisplay2">1,000 UGX</span>
+                <span style="font-weight: 400; font-size: 12px; display: none;" id="betSubtext2"></span>
             </div>
         </div>
     </div>
@@ -800,9 +2354,9 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; background: #141516; border-radius: 16px; padding: 20px 16px;">
                     <div style="display: flex; align-items: center; gap: 5px;">
                         <div style="display: flex;">
-                            <div style="width: 28px; height: 28px; background: #3a6ea5; border-radius: 50%; border: 2px solid #141516; margin-right: -6px;"></div>
-                            <div style="width: 28px; height: 28px; background: #5a67d8; border-radius: 50%; border: 2px solid #141516; margin-right: -6px;"></div>
-                            <div style="width: 28px; height: 28px; background: #48bb78; border-radius: 50%; border: 2px solid #141516;"></div>
+                            <div style="width: 28px; height: 28px; background: #ce4f75; border-radius: 50%; border: 2px solid #141516; margin-right: -6px;"></div>
+                            <div style="width: 28px; height: 28px; background: #2733a0; border-radius: 50%; border: 2px solid #141516; margin-right: -6px;"></div>
+                            <div style="width: 28px; height: 28px; background: #6cbb48; border-radius: 50%; border: 2px solid #141516;"></div>
                         </div>
                         <span style="color: #9ea0a5; font-size: 12px; font-weight: 400;" id="betCounter">0/0 Bets</span>
                     </div>
@@ -841,6 +2395,7 @@
     
     <!-- DASHBOARD MODAL -->
     <div id="dashboardModal" style="display: none;" class="modal-overlay">
+
         <div class="modal-content">
             <div class="modal-header">
                 <h3>⚙️ Control Dashboard</h3>
@@ -856,6 +2411,7 @@
                     <button class="preset-btn" onclick="setBalance(50000)">+50,000</button>
                 </div>
             </div>
+
             <div class="setting-row">
                 <label class="setting-label">🎲 Crash Mode</label>
                 <select id="crashMode" class="setting-input" onchange="toggleCustomPresets()">
@@ -885,6 +2441,16 @@
                     <button class="preset-btn" onclick="setStakeRange(50000, 500000)">High Roller</button>
                     <button class="preset-btn" onclick="setStakeRange(20000, 150000)">Conservative</button>
                 </div>
+            </div>
+            <div class="setting-row">
+                <label class="setting-label">📡 Signal Predictor</label>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div id="signalToggle" onclick="toggleSignal()" style="width: 50px; height: 28px; background: #2c2d30; border-radius: 14px; padding: 2px; cursor: pointer; transition: all 0.3s ease; position: relative;">
+                        <div id="signalToggleKnob" style="width: 24px; height: 24px; background: #9ea0a5; border-radius: 50%; transition: all 0.3s ease; position: absolute; left: 2px; top: 2px;"></div>
+                    </div>
+                    <span id="signalToggleLabel" style="color: #9ea0a5; font-size: 13px;">OFF</span>
+                </div>
+                <div style="margin-top: 6px; font-size: 11px; color: #6b7280;">Get crash point signal for each round</div>
             </div>
             <button class="save-btn" onclick="saveDashboardSettings()">💾 Save Settings</button>
         </div>
@@ -977,6 +2543,12 @@
     let timeoutWindowActive = false;
     let cashoutTriggered = false;
     let isRoundStarting = false;
+    // ============ SIGNAL PREDICTOR VARIABLES ============
+let signalEnabled = false;
+let signalButtonActive = false;
+let signalFloatingButton = null;
+let signalUsedThisRound = false;
+let signalTimeout = null;
 
     // ============ CRASH MODE VARIABLES ============
     let gameCrashMode = 'random';
@@ -998,13 +2570,168 @@
     ];
 
     function showCashoutNotification(amount, cardNumber) {
-        const notification = document.createElement('div');
-        notification.className = 'cashout-notification';
-        notification.innerHTML = `You cashed out <strong>${formatCurrency(amount)} UGX</strong>`;
-        document.body.appendChild(notification);
-        setTimeout(() => notification.remove(), 3000);
-    }
-
+    const notification = document.createElement('div');
+    notification.className = 'cashout-notification';
+    
+    // === LEFT SECTION (~58%) ===
+    const leftSection = document.createElement('div');
+    leftSection.style.cssText = `
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex: 0 0 58%;
+        gap: 0px;
+        padding-right: 6px;
+    `;
+    
+    const smallText = document.createElement('span');
+    smallText.style.cssText = `
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 400;
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        line-height: 1.2;
+    `;
+    smallText.textContent = 'You have cashed out!';
+    
+    // === CHANGED THIS PART ===
+    const largeText = document.createElement('span');
+    largeText.style.cssText = `
+        color: white;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 1.2;
+        letter-spacing: 0.3px;
+    `;
+    largeText.textContent = currentMultiplier.toFixed(2) + 'X';  // NOW SHOWS ACTUAL CRASH POINT
+    
+    leftSection.appendChild(smallText);
+    leftSection.appendChild(largeText);
+    
+    // === RIGHT REWARD SECTION (~28%) ===
+    const rewardSection = document.createElement('div');
+    rewardSection.style.cssText = `
+        background: linear-gradient(135deg, #3a7a2a, #4a9a3a);
+        border-radius: 40px;
+        padding: 3px 16px;
+        flex: 0 0 28%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 36px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: inset 0 1px 2px rgba(255,255,255,0.1);
+    `;
+    
+    const starsBg = document.createElement('div');
+    starsBg.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        opacity: 0.2;
+        font-size: 20px;
+        color: white;
+        letter-spacing: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    `;
+    starsBg.textContent = '✦ ✦ ✦ ✦ ✦';
+    rewardSection.appendChild(starsBg);
+    
+    const rewardLabel = document.createElement('span');
+    rewardLabel.style.cssText = `
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 700;
+        font-size: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        line-height: 1.1;
+        position: relative;
+        z-index: 1;
+    `;
+    rewardLabel.textContent = 'WIN UGX';
+    
+    const rewardAmount = document.createElement('span');
+    rewardAmount.style.cssText = `
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 1.1;
+        position: relative;
+        z-index: 1;
+    `;
+    rewardAmount.textContent = formatCurrency(amount);
+    
+    rewardSection.appendChild(rewardLabel);
+    rewardSection.appendChild(rewardAmount);
+    
+    // === CLOSE BUTTON SECTION (~14%) ===
+    const closeSection = document.createElement('div');
+    closeSection.style.cssText = `
+        flex: 0 0 10%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 44px;
+        padding-left: -17px;
+    `;
+    
+    const closeBtn = document.createElement('div');
+    closeBtn.style.cssText = `
+        width: 28px;
+        height: 28px;
+        background: rgba(58, 150, 58, 0.6);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background 0.2s;
+        flex-shrink: 0;
+    `;
+    closeBtn.onmouseover = function() {
+        this.style.background = 'rgba(58, 150, 58, 0.9)';
+    };
+    closeBtn.onmouseout = function() {
+        this.style.background = 'rgba(58, 150, 58, 0.6)';
+    };
+    closeBtn.onclick = function() {
+        notification.remove();
+    };
+    
+    const closeIcon = document.createElement('span');
+    closeIcon.style.cssText = `
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 300;
+        line-height: 1;
+        user-select: none;
+    `;
+    closeIcon.textContent = '✕';
+    
+    closeBtn.appendChild(closeIcon);
+    closeSection.appendChild(closeBtn);
+    
+    notification.appendChild(leftSection);
+    notification.appendChild(rewardSection);
+    notification.appendChild(closeSection);
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(function() {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 4000);
+}
     function generateStakersForRound() {
         const newStakers = [];
         const step = (maxStakeAmount - minStakeAmount) / 23;
@@ -1241,7 +2968,7 @@
     let isFlyingAway = false;
     let flyAwayStartTime = 0;
     let flyAwayProgress = 0;
-    const FLY_AWAY_DURATION = 500; // ms
+    const FLY_AWAY_DURATION = 1500; // ms
 
 
 
@@ -1861,6 +3588,10 @@
 
     function startCountdown() {
         (function() {
+              // Generate crash point early so signal is ready
+    crashPoint = generateCrashPoint();
+    
+ 
             // RESET CRASH VALUE IMMEDIATELY
             crashValueEl.innerHTML = '1.00x';
             crashValueEl.style.color = '#28a71d';
@@ -1931,6 +3662,21 @@
         })();
     }
     function startCrashRound() {
+    // Reset signal state for new round
+    signalUsedThisRound = false;
+    
+    // Reset the button UI for new round
+    const signalValue = document.getElementById('signalValue');
+    if (signalValue) {
+        signalValue.textContent = '...';
+        signalValue.style.background = 'rgba(255,255,255,0.2)';
+    }
+    if (signalFloatingButton) {
+        signalFloatingButton.style.cursor = 'grab';
+        signalFloatingButton.style.opacity = '1';
+    }
+    
+    // ... rest of the existing code ...
         // Prevent multiple simultaneous calls
         if (isRoundStarting) {
             console.log('Round already starting, skipping');
@@ -1949,7 +3695,7 @@
 
         hideCountdownOverlay();
 
-        crashPoint = generateCrashPoint();
+        //crashPoint = generateCrashPoint();
         roundStartTime = performance.now();
         currentMultiplier = 1.00;
         gamePhase = 'running';
@@ -1962,7 +3708,7 @@
         // Start aircraft flight
         console.log('Calling startFlight from startCrashRound');
         startFlight();
-        roundStatusEl.innerHTML = '✈️ Multiplier Rising';
+        roundStatusEl.innerHTML = ' Multiplier Rising';
         crashValueEl.innerHTML = '1.00x';
         crashValueEl.style.color = '#28a71d';
         crashValueEl.classList.remove('crashing');
@@ -2103,6 +3849,11 @@
         updateButtonState(2, currentAmount2);
     }
     function crashGame() {
+    // Remove floating button when round crashes
+   
+    
+    // ... rest of the existing code ...
+
         if (gamePhase !== 'running') return;
         if (animationFrameId) cancelAnimationFrame(animationFrameId);
         if (totalWinUpdateInterval) clearInterval(totalWinUpdateInterval);
@@ -2414,6 +4165,317 @@
             presets.style.display = (mode === 'custom') ? 'block' : 'none';
         }
     }
+    function toggleSignal() {
+    signalEnabled = !signalEnabled;
+    const toggle = document.getElementById('signalToggle');
+    const knob = document.getElementById('signalToggleKnob');
+    const label = document.getElementById('signalToggleLabel');
+    
+    if (signalEnabled) {
+        toggle.style.background = '#28a71d';
+        knob.style.background = 'white';
+        knob.style.left = '24px';
+        label.textContent = 'ON';
+        label.style.color = '#28a71d';
+    } else {
+        toggle.style.background = '#2c2d30';
+        knob.style.background = '#9ea0a5';
+        knob.style.left = '2px';
+        label.textContent = 'OFF';
+        label.style.color = '#9ea0a5';
+    }
+}
+// ============ FLOATING SIGNAL BUTTON ============
+// ============ FLOATING SIGNAL BUTTON ============
+function showSignalButton() {
+    // Don't show if already exists
+    if (signalFloatingButton) return;
+    
+    // Create the floating button container
+    signalFloatingButton = document.createElement('div');
+    signalFloatingButton.id = 'signalFloatingButton';
+    signalFloatingButton.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        right: 20px;
+        z-index: 9999;
+        background: darkred;
+        border-radius: 50px;
+        padding: 10px 18px;
+        cursor: grab;
+        border: 2px solid rgba(255,255,255,0.3);
+        transition: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 80px;
+        max-width: 300px;
+        justify-content: center;
+        user-select: none;
+        touch-action: none;
+        flex-wrap: nowrap;
+        box-sizing: border-box;
+        opacity: 1;
+    `;
+    
+    // Resize handle (bottom-right corner)
+    const resizeHandle = document.createElement('div');
+    resizeHandle.style.cssText = `
+        position: absolute;
+        bottom: -6px;
+        right: -6px;
+        width: 16px;
+        height: 16px;
+        background: black;
+        border-radius: 50%;
+        cursor: nw-resize;
+        border: 2px solid white;
+        opacity: 0.5;
+    `;
+    signalFloatingButton.appendChild(resizeHandle);
+    
+    // Signal value display (crash point)
+    const signalValue = document.createElement('span');
+    signalValue.id = 'signalValue';
+    signalValue.style.cssText = `
+        color: black;
+        font-weight: 700;
+        font-size: 18px;
+        background: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        min-width: 40px;
+        text-align: center;
+        pointer-events: none;
+        white-space: nowrap;
+        flex-shrink: 0;
+    `;
+    signalValue.textContent = '...';
+    signalFloatingButton.appendChild(signalValue);
+    
+    // Dismiss (X) button
+    const dismissBtn = document.createElement('span');
+    dismissBtn.id = 'signalDismiss';
+    dismissBtn.style.cssText = `
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-left: 4px;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+        padding: 0 4px;
+        pointer-events: auto;
+    `;
+    dismissBtn.textContent = '✕';
+    dismissBtn.onclick = function(e) {
+        e.stopPropagation();
+        dismissSignal();
+    };
+    signalFloatingButton.appendChild(dismissBtn);
+    
+    document.body.appendChild(signalFloatingButton);
+    signalButtonActive = true;
+    signalUsedThisRound = false;
+    
+    // === AUTO-FIT TEXT ===
+  // === AUTO-FIT TEXT ===
+function fitTextToButton() {
+    const signalValueEl = document.getElementById('signalValue');
+    const button = signalFloatingButton;
+    if (!button || !signalValueEl) return;
+    
+    const buttonWidth = button.offsetWidth;
+    const buttonHeight = button.offsetHeight;
+    
+    // Calculate font size based on button dimensions - more responsive
+    let fontSize = Math.min(buttonHeight * 0.85, buttonWidth * 0.25);
+    fontSize = Math.max(14, Math.min(50, fontSize));
+    signalValueEl.style.fontSize = fontSize + 'px';
+    
+    // Also adjust padding of the value pill
+    const paddingSize = Math.max(4, Math.min(12, buttonWidth * 0.04));
+    signalValueEl.style.padding = paddingSize + 'px ' + (paddingSize * 2) + 'px';
+}
+    
+    setTimeout(fitTextToButton, 50);
+    
+    const resizeObserver = new ResizeObserver(function() {
+        fitTextToButton();
+    });
+    resizeObserver.observe(signalFloatingButton);
+    window.addEventListener('resize', fitTextToButton);
+    
+    // === CLICK HANDLER - Get signal on click ===
+    signalFloatingButton.onclick = function(e) {
+        // Don't trigger if clicking dismiss button
+        if (e.target.id === 'signalDismiss') return;
+        // Don't trigger if dragging
+        if (isDragging) return;
+        
+        // Get current signal
+        getSignal();
+    };
+    
+    // === DRAG FUNCTIONALITY ===
+    let isDragging = false;
+    let dragOffsetX, dragOffsetY;
+    
+    signalFloatingButton.addEventListener('mousedown', function(e) {
+        if (e.target.id === 'signalDismiss' || e.target === resizeHandle) return;
+        isDragging = true;
+        const rect = signalFloatingButton.getBoundingClientRect();
+        dragOffsetX = e.clientX - rect.left;
+        dragOffsetY = e.clientY - rect.top;
+        signalFloatingButton.style.cursor = 'grabbing';
+        signalFloatingButton.style.transition = 'none';
+    });
+    
+    document.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        let x = e.clientX - dragOffsetX;
+        let y = e.clientY - dragOffsetY;
+        
+        const rect = signalFloatingButton.getBoundingClientRect();
+        const maxX = window.innerWidth - rect.width;
+        const maxY = window.innerHeight - rect.height;
+        x = Math.max(0, Math.min(x, maxX));
+        y = Math.max(0, Math.min(y, maxY));
+        
+        signalFloatingButton.style.left = x + 'px';
+        signalFloatingButton.style.top = y + 'px';
+        signalFloatingButton.style.right = 'auto';
+        signalFloatingButton.style.bottom = 'auto';
+    });
+    
+    document.addEventListener('mouseup', function() {
+        if (isDragging) {
+            isDragging = false;
+            signalFloatingButton.style.cursor = 'grab';
+        }
+    });
+    
+    // Touch support
+    signalFloatingButton.addEventListener('touchstart', function(e) {
+        if (e.target.id === 'signalDismiss' || e.target === resizeHandle) return;
+        const touch = e.touches[0];
+        const rect = signalFloatingButton.getBoundingClientRect();
+        dragOffsetX = touch.clientX - rect.left;
+        dragOffsetY = touch.clientY - rect.top;
+        isDragging = true;
+    }, { passive: true });
+    
+    document.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        const touch = e.touches[0];
+        let x = touch.clientX - dragOffsetX;
+        let y = touch.clientY - dragOffsetY;
+        
+        const rect = signalFloatingButton.getBoundingClientRect();
+        const maxX = window.innerWidth - rect.width;
+        const maxY = window.innerHeight - rect.height;
+        x = Math.max(0, Math.min(x, maxX));
+        y = Math.max(0, Math.min(y, maxY));
+        
+        signalFloatingButton.style.left = x + 'px';
+        signalFloatingButton.style.top = y + 'px';
+        signalFloatingButton.style.right = 'auto';
+        signalFloatingButton.style.bottom = 'auto';
+    }, { passive: true });
+    
+    document.addEventListener('touchend', function() {
+        isDragging = false;
+    });
+    
+    // === RESIZE FUNCTIONALITY ===
+    let isResizing = false;
+    let resizeStartX, resizeStartY, resizeStartWidth, resizeStartHeight;
+    
+    resizeHandle.addEventListener('mousedown', function(e) {
+        e.stopPropagation();
+        isResizing = true;
+        const rect = signalFloatingButton.getBoundingClientRect();
+        resizeStartX = e.clientX;
+        resizeStartY = e.clientY;
+        resizeStartWidth = rect.width;
+        resizeStartHeight = rect.height;
+        signalFloatingButton.style.transition = 'none';
+    });
+    
+    document.addEventListener('mousemove', function(e) {
+        if (!isResizing) return;
+        const deltaX = e.clientX - resizeStartX;
+        const deltaY = e.clientY - resizeStartY;
+        let newWidth = Math.max(100, resizeStartWidth + deltaX);
+        let newHeight = Math.max(40, resizeStartHeight + deltaY);
+        signalFloatingButton.style.width = newWidth + 'px';
+        signalFloatingButton.style.height = newHeight + 'px';
+        signalFloatingButton.style.borderRadius = Math.min(50, newHeight / 2) + 'px';
+    });
+    
+    document.addEventListener('mouseup', function() {
+        isResizing = false;
+    });
+    
+    resizeHandle.addEventListener('touchstart', function(e) {
+        e.stopPropagation();
+        const touch = e.touches[0];
+        const rect = signalFloatingButton.getBoundingClientRect();
+        resizeStartX = touch.clientX;
+        resizeStartY = touch.clientY;
+        resizeStartWidth = rect.width;
+        resizeStartHeight = rect.height;
+        isResizing = true;
+    }, { passive: true });
+    
+    document.addEventListener('touchmove', function(e) {
+        if (!isResizing) return;
+        const touch = e.touches[0];
+        const deltaX = touch.clientX - resizeStartX;
+        const deltaY = touch.clientY - resizeStartY;
+        let newWidth = Math.max(100, resizeStartWidth + deltaX);
+        let newHeight = Math.max(40, resizeStartHeight + deltaY);
+        signalFloatingButton.style.width = newWidth + 'px';
+        signalFloatingButton.style.height = newHeight + 'px';
+        signalFloatingButton.style.borderRadius = Math.min(50, newHeight / 2) + 'px';
+    }, { passive: true });
+    
+    document.addEventListener('touchend', function() {
+        isResizing = false;
+    });
+}
+
+function getSignal() {
+    // Don't proceed if button doesn't exist
+    if (!signalFloatingButton) return;
+    
+    // Get the current crash point
+    const crashPointValue = crashPoint;
+    const signalValue = document.getElementById('signalValue');
+    
+    if (signalValue) {
+        // Show with 1 second delay (no loading visuals)
+        setTimeout(function() {
+            signalValue.textContent = crashPointValue.toFixed(2) + 'x';
+            signalValue.style.background = 'white';
+            signalValue.style.color = 'darkred';
+            signalUsedThisRound = true;
+        }, 500);
+    }
+}
+
+function dismissSignal() {
+    removeSignalButton();
+}
+
+function removeSignalButton() {
+    if (signalFloatingButton) {
+        signalFloatingButton.remove();
+        signalFloatingButton = null;
+        signalButtonActive = false;
+    }
+}
+
 
     function setBalance(amount) {
         userBalance += amount;
@@ -2440,39 +4502,38 @@
     }
 
     function saveDashboardSettings() {
-        var newBalance = parseFloat(document.getElementById('balanceInput').value);
-        if (!isNaN(newBalance) && newBalance >= 0) {
-            userBalance = newBalance;
-            balanceEl.innerHTML = formatCurrency(userBalance);
-        }
-
-        var newMin = parseInt(document.getElementById('minStake').value);
-        var newMax = parseInt(document.getElementById('maxStake').value);
-        if (!isNaN(newMin) && !isNaN(newMax) && newMin > 0 && newMax > newMin) {
-            minStakeAmount = newMin;
-            maxStakeAmount = newMax;
-            refreshStakersForNewRound();
-        }
-
-        gameCrashMode = document.getElementById('crashMode').value;
-        
-        if (gameCrashMode === 'custom') {
-            var pointsStr = document.getElementById('customCrashPoints').value;
-            var points = pointsStr.split(',').map(function(p) {
-                return parseFloat(p.trim().replace('x', ''));
-            }).filter(function(p) {
-                return !isNaN(p) && p > 1;
-            });
-            if (points.length > 0) {
-                customCrashPoints = points;
-                customIndex = 0;
-            }
-        }
-
-        closeDashboard();
-        showToast('Settings saved!', 'success');
+    var newBalance = parseFloat(document.getElementById('balanceInput').value);
+    if (!isNaN(newBalance) && newBalance >= 0) {
+        userBalance = newBalance;
+        balanceEl.innerHTML = formatCurrency(userBalance);
     }
 
+    var newMin = parseInt(document.getElementById('minStake').value);
+    var newMax = parseInt(document.getElementById('maxStake').value);
+    if (!isNaN(newMin) && !isNaN(newMax) && newMin > 0 && newMax > newMin) {
+        minStakeAmount = newMin;
+        maxStakeAmount = newMax;
+        refreshStakersForNewRound();
+    }
+
+    gameCrashMode = document.getElementById('crashMode').value;
+    
+    if (gameCrashMode === 'custom') {
+        var pointsStr = document.getElementById('customCrashPoints').value;
+        var points = pointsStr.split(',').map(function(p) {
+            return parseFloat(p.trim().replace('x', ''));
+        }).filter(function(p) {
+            return !isNaN(p) && p > 1;
+        });
+        if (points.length > 0) {
+            customCrashPoints = points;
+            customIndex = 0;
+        }
+    }
+
+    closeDashboard();
+    showToast('Settings saved!', 'success');
+}
     autoToggle1.addEventListener('click', () => {
         autoMode.card1 = !autoMode.card1;
         autoToggle1.style.background = autoMode.card1 ? '#28a71d' : 'transparent';
@@ -2539,7 +4600,10 @@
             }
         }
     }, 100);
-
+// Show signal button automatically after 1 second on page load
+setTimeout(function() {
+        showSignalButton();
+}, 1000);
     window.adjustAmount = adjustAmount;
     window.adjustAmount2 = adjustAmount2;
     window.updateAmount = updateAmount;
@@ -2555,6 +4619,80 @@
     window.setCrashPreset = setCrashPreset;
     window.saveDashboardSettings = saveDashboardSettings;
     window.setStakeRange = setStakeRange;
+    window.toggleSignal = toggleSignal;
+window.showSignalButton = showSignalButton;
+window.removeSignalButton = removeSignalButton;
+//window.getSignal = getSignal;
+window.dismissSignal = dismissSignal;
+// ============================================================
+// PAGE 1: NAVIGATION
+// ============================================================
+// ============================================================
+// PAGE 0 NAVIGATION
+// ============================================================
+function goToPage1FromPage0() {
+    document.getElementById('page0').style.display = 'none';
+    document.getElementById('page1').style.display = 'flex';
+}
+
+// Auto-transition from Page 0 to Page 1 after 2 seconds
+setTimeout(function() {
+    goToPage1FromPage0();
+}, 2000);
+function goToPage2() {
+    document.getElementById('page1').style.display = 'none';
+    document.getElementById('page2').style.display = 'flex';
+}
+function goToPage3() {
+    document.getElementById('page2').style.display = 'none';
+    document.getElementById('page3').style.display = 'flex';
+    
+    // After 1 second, go to Page 4
+    setTimeout(function() {
+        goToPage4();
+    }, 1000);
+}
+function goToPage4() {
+    document.getElementById('page3').style.display = 'none';
+    document.getElementById('page4').style.display = 'flex';
+    
+    // After 3 seconds, go to Page 5
+    setTimeout(function() {
+        goToPage5();
+    }, 3000);
+}
+function goToPage5() {
+    // Hide page 4
+    document.getElementById('page4').style.display = 'none';
+    
+    // Try to open the real Aviator app
+    openAviatorApp();
+}
+
+
+
+
+function openAviatorApp() {
+    // Hide all new pages
+    document.getElementById('page0').style.display = 'none';
+    document.getElementById('page1').style.display = 'none';
+    document.getElementById('page2').style.display = 'none';
+    document.getElementById('page3').style.display = 'none';
+    document.getElementById('page4').style.display = 'none';
+    
+    // Show your original game (the .app container)
+    const appContainer = document.querySelector('.app');
+    if (appContainer) {
+        appContainer.style.display = 'block';
+        appContainer.style.position = 'relative';
+        appContainer.style.zIndex = '1';
+    }
+    
+    // Make sure the body scrolls normally again
+    document.body.style.overflow = 'auto';
+    document.body.style.height = 'auto';
+}
+
 
     </script>
 </body>
